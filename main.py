@@ -10,10 +10,10 @@ pygame.init()
 WINDOW = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption(GAME_NAME)
 
-def window_update(window, color, clock, showFps):
+def window_update(window, color, clock, show_fps):
     pygame.display.update()
     window.fill(color)
-    print(clock.get_fps()) if showFps else None
+    print(clock.get_fps()) if show_fps else None
 
 init_board = Board(BOARD_SIZE, BOARD_COLUMNS)
 player1: list[dict] = Pawns().create_player_pawns(1, init_board.board)
