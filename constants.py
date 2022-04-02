@@ -9,17 +9,18 @@ CELL_COLOR_1: str = "W"
 CELL_COLOR_2: str = "B"
 
 #_____COLORS_____
-BLACK = (0,0,0)
-WHITE = (255,255,255)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
+BLACK: tuple[int, int, int] = (0,0,0)
+WHITE: tuple[int, int, int] = (255,255,255)
+RED: tuple[int, int, int] = (255,0,0)
+GREEN: tuple[int, int, int] = (0,255,0)
+BLUE: tuple[int, int, int] = (0,0,255)
 
 #_____GUI_____
-GAME_NAME = "Checkers"
-WIDTH, HEIGHT = 1080, 720
-WINDOW_SIZE = (WIDTH, HEIGHT)
-FPS = 60
+GAME_NAME: str = "Checkers"
+WIDTH: int = 1080
+HEIGHT: int = 720
+WINDOW_SIZE: tuple[int, int] = (WIDTH, HEIGHT)
+FPS: int = 60
 CLOCK = pygame.time.Clock()
 
 GUI_CELL_SIZE: int = 50
