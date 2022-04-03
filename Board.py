@@ -73,7 +73,7 @@ class Board:
     
     def gui_board(self, board: list[dict]) -> None:
         for cell_dict in board:
-            cell_gui_position: tuple[int, int] = (cell_dict["cell_row"] * GUI_CELL_SIZE, BOARD_COLUMNS.index(cell_dict["cell_col"]) * GUI_CELL_SIZE)
+            cell_gui_position: tuple[int, int] = (BOARD_COLUMNS.index(cell_dict["cell_col"]) * GUI_CELL_SIZE, cell_dict["cell_row"] * GUI_CELL_SIZE)
             cell_gui_size: tuple[int, int] = (GUI_CELL_SIZE, GUI_CELL_SIZE)
             cell_dict["cell_gui"] = pygame.Rect(cell_gui_position, cell_gui_size)
     

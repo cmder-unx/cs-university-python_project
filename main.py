@@ -30,13 +30,29 @@ def main() -> None:
     game_running = True
     while game_running:
         for event in pygame.event.get():
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                #THIS IS CURRENTLY A TEST - SO IT WILL BE CLEANER LATER
+                for cell in board.board:
+                    if cell["cell_gui"].collidepoint(mouse_pos_x, mouse_pos_y):
+                        cell_informations: tuple[dict, int] = board.get_cell(board.board, cell["cell_index"])
+                        if not cell_informations[0]["cell_is_empty"]:
+                            pawn_informations: tuple[dict, int] = player1.get_pawn(player1.player_pawns, list(cell_informations[0]["cell_index"]))
+                            if pawn_informations[0]["pawn_status"] == "alive":
+                                reachable_cells_by_pawn: list[tuple[dict, int]] = player1.is_reachable(pawn_informations, board)
+                                print(reachable_cells_by_pawn)
+            
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
         board.draw_gui_board(WINDOW, board.board)
         player1.draw_gui_pawns(WINDOW, player1.player_pawns)
         player2.draw_gui_pawns(WINDOW, player2.player_pawns)
+        
+        mouse_pos_x: int = pygame.mouse.get_pos()[0]
+        mouse_pos_y: int = pygame.mouse.get_pos()[1]
+        
         CLOCK.tick(FPS)
-        window_update(WINDOW, BLACK, CLOCK, True)
+        window_update(WINDOW, BLACK, CLOCK, False)
 
 main()

@@ -142,7 +142,7 @@ class Pawns:
         for pawn in pawns:
             for cell in board:
                 if cell["cell_row"] == pawn["pawn_row"] and cell["cell_col"] == pawn["pawn_col"]:
-                    pawn_gui_position: tuple[int, int] = (cell["cell_gui"].y+GUI_CELL_SIZE//2, cell["cell_gui"].x+GUI_CELL_SIZE//2)
+                    pawn_gui_position: tuple[int, int] = (cell["cell_gui"].x+GUI_CELL_SIZE//2, cell["cell_gui"].y+GUI_CELL_SIZE//2)
                     pawn_gui_size: tuple[int, int] = (GUI_PAWN_SIZE, GUI_PAWN_SIZE)
                     pawn["pawn_gui"] = pygame.Rect(pawn_gui_position, pawn_gui_size)
     
