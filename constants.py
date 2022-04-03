@@ -16,13 +16,18 @@ GREEN: tuple[int, int, int] = (0,255,0)
 BLUE: tuple[int, int, int] = (0,0,255)
 
 #_____GUI_____
-GAME_NAME: str = "Checkers"
-WIDTH: int = 1080
-HEIGHT: int = 720
-WINDOW_SIZE: tuple[int, int] = (WIDTH, HEIGHT)
-FPS: int = 60
-CLOCK = pygame.time.Clock()
-
 GUI_CELL_SIZE: int = 50
 GUI_CELL_COLOR_1: tuple[int] = WHITE
 GUI_CELL_COLOR_2: tuple[int] = BLACK
+
+GUI_PAWN_SIZE: int = 25
+GUI_PAWN_COLOR_1: tuple[int, int, int] = (0,0,255)
+GUI_PAWN_COLOR_2: tuple[int, int, int] = (255,0,0)
+
+#    PYGAME
+GAME_NAME: str = "Checkers"
+WIDTH: int = BOARD_SIZE*GUI_CELL_SIZE
+HEIGHT: int = BOARD_SIZE*GUI_CELL_SIZE
+WINDOW_SIZE: tuple[int, int] = (WIDTH, HEIGHT)
+FPS: int = 60
+CLOCK: pygame.time.Clock = pygame.time.Clock()
