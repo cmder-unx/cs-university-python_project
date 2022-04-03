@@ -28,9 +28,10 @@ get_a_pawn_informations: tuple[dict, int] = player1.get_pawn(player1.player_pawn
 
 def main() -> None:
     game_running = True
+    reachable_cells_by_pawn = None
     while game_running:
+        
         for event in pygame.event.get():
-            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 #THIS IS CURRENTLY A TEST - SO IT WILL BE CLEANER LATER
                 for cell in board.board:
@@ -40,14 +41,22 @@ def main() -> None:
                             pawn_informations: tuple[dict, int] = player1.get_pawn(player1.player_pawns, list(cell_informations[0]["cell_index"]))
                             if pawn_informations[0]["pawn_status"] == "alive":
                                 reachable_cells_by_pawn: list[tuple[dict, int]] = player1.is_reachable(pawn_informations, board)
-                                print(reachable_cells_by_pawn)
-            
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+        
         board.draw_gui_board(WINDOW, board.board)
         player1.draw_gui_pawns(WINDOW, player1.player_pawns)
         player2.draw_gui_pawns(WINDOW, player2.player_pawns)
+        
+        if reachable_cells_by_pawn:
+            for reachable_cell in reachable_cells_by_pawn:
+                reachable_cell_gui_indicator_position: tuple[int, int] = (reachable_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2, reachable_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2)
+                reachable_cell_gui_indicator_size: int = 10
+                reachable_cell_gui_indicator_color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if pawn_informations[0]["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
+                #print(reachable_cell_gui_indicator_color)
+                pygame.draw.circle(WINDOW, reachable_cell_gui_indicator_color, reachable_cell_gui_indicator_position, reachable_cell_gui_indicator_size)
+        
         
         mouse_pos_x: int = pygame.mouse.get_pos()[0]
         mouse_pos_y: int = pygame.mouse.get_pos()[1]

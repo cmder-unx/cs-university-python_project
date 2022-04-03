@@ -80,17 +80,29 @@ class Pawns:
             column_right: int = pawn_col + i
             
             if pawn_owner == 1:
-                reach_top_right_cell: tuple[int, str] = (row_top, columns[column_right])
+                if column_right < len(columns):
+                    reach_top_right_cell: tuple[int, str] = (row_top, columns[column_right])
+                else:
+                    reach_top_right_cell: tuple[int, str] = (None, None)
                 reach_top_left_cell: tuple[int, str] = (row_top, columns[column_left])
                 if pawn_type == "Queen":
                     reach_bottom_left_cell: tuple[int, str] = (row_bottom, columns[column_left])
-                    reach_bottom_right_cell: tuple[int, str] = (row_bottom, columns[column_right])
+                    if column_right < len(columns):
+                        reach_bottom_right_cell: tuple[int, str] = (row_bottom, columns[column_right])
+                    else:
+                        reach_bottom_right_cell: tuple[int, str] = (None, None)
             else:
-                reach_top_right_cell: tuple[int, str] = (row_bottom, columns[column_right])
+                if column_right < len(columns):
+                    reach_top_right_cell: tuple[int, str] = (row_bottom, columns[column_right])
+                else:
+                    reach_top_right_cell: tuple[int, str] = (None, None)
                 reach_top_left_cell: tuple[int, str] = (row_bottom, columns[column_left])
                 if pawn_type == "Queen":
                     reach_bottom_left_cell: tuple[int, str] = (row_top, columns[column_left])
-                    reach_bottom_right_cell: tuple[int, str] = (row_top, columns[column_right])
+                    if column_right < len(columns):
+                        reach_bottom_right_cell: tuple[int, str] = (row_top, columns[column_right])
+                    else:
+                        reach_bottom_right_cell: tuple[int, str] = (None, None)
         
             top_right_cell_informations: tuple[dict, int] = board.get_cell(board.board, reach_top_right_cell)
             top_left_cell_informations: tuple[dict, int] = board.get_cell(board.board, reach_top_left_cell)
