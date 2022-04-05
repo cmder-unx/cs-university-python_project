@@ -1,5 +1,9 @@
 import string, pygame
 
+"""
+THIS FILE CONTAINS ALL THE CONSTANTS USED IN THE GAME
+"""
+
 # DEFINE CONSTANTS
 BOARD_SIZE: int = 10
 BOARD_COLUMNS: tuple[str] = tuple(string.ascii_uppercase[:BOARD_SIZE])
@@ -31,3 +35,6 @@ HEIGHT: int = BOARD_SIZE*GUI_CELL_SIZE
 WINDOW_SIZE: tuple[int, int] = (WIDTH, HEIGHT)
 FPS: int = 60
 CLOCK: pygame.time.Clock = pygame.time.Clock()
+
+WINDOW: pygame.Surface = pygame.display.set_mode(WINDOW_SIZE)
+pygame.display.set_caption(GAME_NAME)
