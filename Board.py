@@ -8,7 +8,7 @@ class Board:
         self.size: int = size # size of the board, number of rows and columns
         self.columns: list[str] = columns # list of the columns names, check constants.py for more info BOARD_COLUMNS
         
-        # Create the board. The board represented by a list of the cells, 
+        # Create the board. The board is represented by a list of the cells, 
         # each cell is a dict with the following keys: 
         # cell_row, cell_col, cell_index, cell_color, cell_is_empty, cell_owner, cell_gui
         self.board: list[dict] = self.create_board()
@@ -75,7 +75,7 @@ class Board:
 
         Args:
             board (list[dict]): the board with all the cells
-            cell_index (tuple[int, str]): the index of the cell we want to get (row, column)
+            cell_index (tuple[int, str]): the index of the cell we want to get tuple (row, column)
 
         Returns:
             tuple[dict, int]: return the cell of the board that correspond to the cell_index and its position index in the board
