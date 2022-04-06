@@ -162,17 +162,26 @@ class Pawns:
         return reachable_cells
 
     def move_pawn(self, pawns:list[dict], pawn: tuple[dict, int], move_to: tuple[int, str], board: Board) -> bool:
+        """_summary_: this function will move the pawn to the cell that is passed in parameter and return True if the move has been done, False otherwise
+
+        Args:
+            pawns (list[dict]): list of pawns 
+            pawn (tuple[dict, int]): the pawn that we want to move
+            move_to (tuple[int, str]): the destination cell
+            board (Board): board initializer
+
+        Returns:
+            bool: boolean that will be True if the move has been done, False otherwise
         """
-        this function will move the pawn
-        return True if the move is good and False otherwise
-        """
-        informations_about_the_actual_cell: tuple[dict, int] = board.get_cell(board.board, tuple(pawn[0]["pawn_pos"]))
-        informations_about_the_destination_cell: tuple[dict, int] = board.get_cell(board.board, move_to)
-        if pawn[0]["pawn_pos"] != list(move_to):
-            if informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_is_empty"]:
+        informations_about_the_actual_cell: tuple[dict, int] = board.get_cell(board.board, tuple(pawn[0]["pawn_pos"])) # get the informations about the actual cell
+        informations_about_the_destination_cell: tuple[dict, int] = board.get_cell(board.board, move_to) # get the informations about the destination cell
+        if pawn[0]["pawn_pos"] != list(move_to): # if the pawn is not already in the destination cell
+            if informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_is_empty"]: # if the destination cell is reachable and empty
+                # Update informations about the actual cell
                 informations_about_the_actual_cell[0]["cell_is_empty"] = True
                 informations_about_the_actual_cell[0]["cell_owner"] = 0
                 
+                # Update the pawn informations (position and gui)
                 pawns[pawn[1]]["pawn_row"] = move_to[0]
                 pawns[pawn[1]]["pawn_col"] = move_to[1]
                 pawns[pawn[1]]["pawn_pos"] = [pawns[pawn[1]]["pawn_row"], pawns[pawn[1]]["pawn_col"]]
@@ -180,6 +189,7 @@ class Pawns:
                 pawns[pawn[1]]["pawn_gui"].x = informations_about_the_destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
                 pawns[pawn[1]]["pawn_gui"].y = informations_about_the_destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
                 
+                # Update informations about the destination cell
                 informations_about_the_destination_cell[0]["cell_is_empty"] = False
                 informations_about_the_destination_cell[0]["cell_owner"] = pawns[pawn[1]]["pawn_owner"]
                 return True
@@ -189,6 +199,12 @@ class Pawns:
             return False
     
     def gui_pawns(self, pawns: list[dict], board: list[dict]) -> None:
+        """_summary_: this function will create the gui for the pawns
+
+        Args:
+            pawns (list[dict]): list of pawns
+            board (list[dict]): the board and all cells
+        """        
         for pawn in pawns:
             for cell in board:
                 if cell["cell_row"] == pawn["pawn_row"] and cell["cell_col"] == pawn["pawn_col"]:
@@ -197,6 +213,12 @@ class Pawns:
                     pawn["pawn_gui"] = pygame.Rect(pawn_gui_position, pawn_gui_size)
     
     def draw_gui_pawns(self, screen: pygame.Surface, pawns: list[dict]) -> None:
+        """_summary_: this function will draw the gui for the pawns
+
+        Args:
+            screen (pygame.Surface): the screen where we want to draw the gui for the pawns, here the screen will be WINDOW constant, see constants.py for more info
+            pawns (list[dict]): the list of pawns
+        """        
         for pawn in pawns:
             if pawn["pawn_gui"] != None:
                 color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if pawn["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
