@@ -112,39 +112,23 @@ class Pawns:
             # We will compute the reachable cells in 2 different ways if it's a basic pawn and 
             # 4 different ways if it's a king 
             # depending on the pawn type
-            if pawn_owner == 1:
-                # for basic pawn
-                if column_right < len(columns):
-                    reach_top_right_cell: tuple[int, str] = (row_top, columns[column_right])
-                else:
-                    reach_top_right_cell: tuple[int, str] = (None, None)
-                if column_left >= 0:
-                    reach_top_left_cell: tuple[int, str] = (row_top, columns[column_left])
-                else:
-                    reach_top_left_cell: tuple[int, str] = (None, None)
-                # if the pawn is a king in addition to the 2 different way for the basic pawn, 
-                # we will compute the 2 other different way
-                if pawn_type == "King":
-                    reach_bottom_left_cell: tuple[int, str] = (row_bottom, columns[column_left])
-                    if column_right < len(columns):
-                        reach_bottom_right_cell: tuple[int, str] = (row_bottom, columns[column_right])
-                    else:
-                        reach_bottom_right_cell: tuple[int, str] = (None, None)
+            # for basic pawn
+            if column_right < len(columns):
+                reach_top_right_cell: tuple[int, str] = (row_top if pawn_owner == 1 else row_bottom, columns[column_right])
             else:
+                reach_top_right_cell: tuple[int, str] = (None, None)
+            if column_left >= 0:
+                reach_top_left_cell: tuple[int, str] = (row_top if pawn_owner == 1 else row_bottom, columns[column_left])
+            else:
+                reach_top_left_cell: tuple[int, str] = (None, None)
+            # if the pawn is a king in addition to the 2 different way for the basic pawn, 
+            # we will compute the 2 other different way
+            if pawn_type == "King":
+                reach_bottom_left_cell: tuple[int, str] = (row_bottom if pawn_owner == 1 else row_top, columns[column_left])
                 if column_right < len(columns):
-                    reach_top_right_cell: tuple[int, str] = (row_bottom, columns[column_right])
+                    reach_bottom_right_cell: tuple[int, str] = (row_bottom if pawn_owner == 1 else row_top, columns[column_right])
                 else:
-                    reach_top_right_cell: tuple[int, str] = (None, None)
-                if column_left >= 1:
-                    reach_top_left_cell: tuple[int, str] = (row_bottom, columns[column_left])
-                else:
-                    reach_top_left_cell: tuple[int, str] = (None, None)
-                if pawn_type == "King":
-                    reach_bottom_left_cell: tuple[int, str] = (row_top, columns[column_left])
-                    if column_right < len(columns):
-                        reach_bottom_right_cell: tuple[int, str] = (row_top, columns[column_right])
-                    else:
-                        reach_bottom_right_cell: tuple[int, str] = (None, None)
+                    reach_bottom_right_cell: tuple[int, str] = (None, None)
 
             # Get informations about the reachable cells
             top_right_cell_informations: tuple[dict, int] = board.get_cell(board.board, reach_top_right_cell)
