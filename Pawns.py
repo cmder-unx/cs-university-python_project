@@ -118,7 +118,10 @@ class Pawns:
                     reach_top_right_cell: tuple[int, str] = (row_top, columns[column_right])
                 else:
                     reach_top_right_cell: tuple[int, str] = (None, None)
-                reach_top_left_cell: tuple[int, str] = (row_top, columns[column_left])
+                if column_left >= 0:
+                    reach_top_left_cell: tuple[int, str] = (row_top, columns[column_left])
+                else:
+                    reach_top_left_cell: tuple[int, str] = (None, None)
                 # if the pawn is a king in addition to the 2 different way for the basic pawn, 
                 # we will compute the 2 other different way
                 if pawn_type == "King":
@@ -132,7 +135,10 @@ class Pawns:
                     reach_top_right_cell: tuple[int, str] = (row_bottom, columns[column_right])
                 else:
                     reach_top_right_cell: tuple[int, str] = (None, None)
-                reach_top_left_cell: tuple[int, str] = (row_bottom, columns[column_left])
+                if column_left >= 1:
+                    reach_top_left_cell: tuple[int, str] = (row_bottom, columns[column_left])
+                else:
+                    reach_top_left_cell: tuple[int, str] = (None, None)
                 if pawn_type == "King":
                     reach_bottom_left_cell: tuple[int, str] = (row_top, columns[column_left])
                     if column_right < len(columns):
@@ -148,6 +154,7 @@ class Pawns:
                 reachable_cells.append(top_right_cell_informations)
             if None not in top_left_cell_informations:
                 reachable_cells.append(top_left_cell_informations)
+            
             
             if pawn_type == "King": # if the pawn is a king we will add the 2 other different way
                 # Get informations about the reachable cells
@@ -176,7 +183,9 @@ class Pawns:
         informations_about_the_actual_cell: tuple[dict, int] = board.get_cell(board.board, tuple(pawn[0]["pawn_pos"])) # get the informations about the actual cell
         informations_about_the_destination_cell: tuple[dict, int] = board.get_cell(board.board, move_to) # get the informations about the destination cell
         if pawn[0]["pawn_pos"] != list(move_to): # if the pawn is not already in the destination cell
-            if informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_is_empty"]: # if the destination cell is reachable and empty
+            if informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_owner"] == 0: # if the destination cell is reachable and empty (has no owner)
+                
+                
                 # Update informations about the actual cell
                 informations_about_the_actual_cell[0]["cell_is_empty"] = True
                 informations_about_the_actual_cell[0]["cell_owner"] = 0
@@ -193,6 +202,8 @@ class Pawns:
                 informations_about_the_destination_cell[0]["cell_is_empty"] = False
                 informations_about_the_destination_cell[0]["cell_owner"] = pawns[pawn[1]]["pawn_owner"]
                 return True
+            elif informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_owner"] != self.player_id:
+                pass
             else:
                 return False
         else:
