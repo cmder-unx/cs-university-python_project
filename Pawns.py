@@ -186,8 +186,8 @@ class Pawns:
                 pawns[pawn[1]]["pawn_col"] = move_to[1]
                 pawns[pawn[1]]["pawn_pos"] = [pawns[pawn[1]]["pawn_row"], pawns[pawn[1]]["pawn_col"]]
                 
-                pawns[pawn[1]]["pawn_gui"].x = informations_about_the_destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
-                pawns[pawn[1]]["pawn_gui"].y = informations_about_the_destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
+                pawns[pawn[1]]["pawn_gui"].x = informations_about_the_destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
+                pawns[pawn[1]]["pawn_gui"].y = informations_about_the_destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
                 
                 # Update informations about the destination cell
                 informations_about_the_destination_cell[0]["cell_is_empty"] = False
