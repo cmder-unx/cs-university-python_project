@@ -117,10 +117,12 @@ class Pawns:
                 reach_top_right_cell: tuple[int, str] = (row_top if pawn_owner == 1 else row_bottom, columns[column_right])
             else:
                 reach_top_right_cell: tuple[int, str] = (None, None)
+            
             if column_left >= 0:
                 reach_top_left_cell: tuple[int, str] = (row_top if pawn_owner == 1 else row_bottom, columns[column_left])
             else:
                 reach_top_left_cell: tuple[int, str] = (None, None)
+            
             # if the pawn is a king in addition to the 2 different way for the basic pawn, 
             # we will compute the 2 other different way
             if pawn_type == "King":

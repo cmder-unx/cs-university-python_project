@@ -118,4 +118,5 @@ def main() -> None:
         CLOCK.tick(FPS) # Set the framerate of the window
         window_update(WINDOW, BLACK, CLOCK, False) # Update the window
 
-main()
+if __name__ == "__main__":
+    main()
