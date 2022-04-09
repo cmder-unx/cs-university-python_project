@@ -60,6 +60,7 @@ def main() -> None:
                             if reachable_cells_by_pawn != None:
                                 if board.get_cell(board.board, cell["cell_index"]) in reachable_cells_by_pawn:
                                     player1.move_pawn(player2.player_pawns, selected_pawn, cell["cell_index"], board)
+                                    print(cell)
                                     reachable_cells_by_pawn = None
                                     selected_pawn = None
                                     turn+=1
@@ -80,6 +81,7 @@ def main() -> None:
                             if reachable_cells_by_pawn != None:
                                 if board.get_cell(board.board, cell["cell_index"]) in reachable_cells_by_pawn:
                                     player2.move_pawn(player1.player_pawns, selected_pawn, cell["cell_index"], board)
+                                    print(cell)
                                     reachable_cells_by_pawn = None
                                     selected_pawn = None
                                     turn+=1
