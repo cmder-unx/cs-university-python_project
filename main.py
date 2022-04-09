@@ -33,7 +33,6 @@ def main() -> None:
     selected_pawn: tuple[dict, int] = None # Will contain the pawn that is currently selected
     reachable_cells_by_pawn: list[tuple[dict, int]] = None # Will contain the reachable cells by the pawn
     while game_running:
-        print(turn)
         mouse_position: tuple[int, int] = pygame.mouse.get_pos() # Get the current mouse position in a tuple (x, y)
         for event in pygame.event.get():
             """
@@ -57,10 +56,10 @@ def main() -> None:
                                     reachable_cells_by_pawn: list[tuple[dict, int]] = player1.is_reachable(selected_pawn, board)
                             else:
                                 reachable_cells_by_pawn = None # If the pawn doesn't exist, the reachable cells will be reset
-                        elif cell["cell_gui"].collidepoint(mouse_position) and cell["cell_is_empty"]:
+                        elif cell["cell_gui"].collidepoint(mouse_position) and cell["cell_owner"] != 1:
                             if reachable_cells_by_pawn != None:
                                 if board.get_cell(board.board, cell["cell_index"]) in reachable_cells_by_pawn:
-                                    player1.move_pawn(player1.player_pawns, selected_pawn, cell["cell_index"], board)
+                                    player1.move_pawn(player2.player_pawns, selected_pawn, cell["cell_index"], board)
                                     reachable_cells_by_pawn = None
                                     selected_pawn = None
                                     turn+=1
@@ -77,10 +76,10 @@ def main() -> None:
                                     reachable_cells_by_pawn: list[tuple[dict, int]] = player2.is_reachable(selected_pawn, board)
                             else:
                                 reachable_cells_by_pawn = None # If the pawn doesn't exist, the reachable cells will be reset
-                        elif cell["cell_gui"].collidepoint(mouse_position) and cell["cell_is_empty"]:
+                        elif cell["cell_gui"].collidepoint(mouse_position) and cell["cell_owner"] != 2:
                             if reachable_cells_by_pawn != None:
                                 if board.get_cell(board.board, cell["cell_index"]) in reachable_cells_by_pawn:
-                                    player2.move_pawn(player2.player_pawns, selected_pawn, cell["cell_index"], board)
+                                    player2.move_pawn(player1.player_pawns, selected_pawn, cell["cell_index"], board)
                                     reachable_cells_by_pawn = None
                                     selected_pawn = None
                                     turn+=1

@@ -154,7 +154,7 @@ class Pawns:
         
         return reachable_cells
 
-    def move_pawn(self, pawns:list[dict], pawn: tuple[dict, int], move_to: tuple[int, str], board: Board) -> bool:
+    def move_pawn(self, ennemy_pawns:list[dict], pawn: tuple[dict, int], move_to: tuple[int, str], board: Board) -> bool:
         """_summary_: this function will move the pawn to the cell that is passed in parameter and return True if the move has been done, False otherwise
 
         Args:
@@ -177,23 +177,72 @@ class Pawns:
                 informations_about_the_actual_cell[0]["cell_owner"] = 0
                 
                 # Update the pawn informations (position and gui)
-                pawns[pawn[1]]["pawn_row"] = move_to[0]
-                pawns[pawn[1]]["pawn_col"] = move_to[1]
-                pawns[pawn[1]]["pawn_pos"] = [pawns[pawn[1]]["pawn_row"], pawns[pawn[1]]["pawn_col"]]
-                
-                pawns[pawn[1]]["pawn_gui"].x = informations_about_the_destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
-                pawns[pawn[1]]["pawn_gui"].y = informations_about_the_destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
+                pawn[0]["pawn_row"] = move_to[0]
+                pawn[0]["pawn_col"] = move_to[1]
+                pawn[0]["pawn_pos"] = [pawn[0]["pawn_row"], pawn[0]["pawn_col"]]
+                pawn[0]["pawn_gui"].x = informations_about_the_destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
+                pawn[0]["pawn_gui"].y = informations_about_the_destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
                 
                 # Update informations about the destination cell
                 informations_about_the_destination_cell[0]["cell_is_empty"] = False
-                informations_about_the_destination_cell[0]["cell_owner"] = pawns[pawn[1]]["pawn_owner"]
+                informations_about_the_destination_cell[0]["cell_owner"] = pawn[0]["pawn_owner"]
                 return True
-            elif informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_owner"] != self.player_id:
-                pass
+            elif informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_owner"] != self.player_id and informations_about_the_destination_cell[0]["cell_owner"] != 0:
+                
+                # We create a fake pawn to check if the pawn can be captured and the cell behind the pawn is empty and can be reached
+                fake_pawn: tuple[dict, int] = (pawn[0].copy(), None)
+                fake_pawn[0]["pawn_row"] = move_to[0]
+                fake_pawn[0]["pawn_col"] = move_to[1]
+                fake_pawn[0]["pawn_pos"] = [fake_pawn[0]["pawn_row"], fake_pawn[0]["pawn_col"]]
+                fake_pawn[0]["pawn_gui"] = None
+                
+                # Fake destination cell
+                fake_cell_index: tuple[int, str] = (move_to[0]-1 if self.player_id == 1 else move_to[0]+1, BOARD_COLUMNS[BOARD_COLUMNS.index(move_to[1])-1] if self.player_id == 1 else BOARD_COLUMNS[BOARD_COLUMNS.index(move_to[1])+1])
+                print(move_to, fake_cell_index)
+                
+                # Check the cells that are reachable by the fake pawn
+                reachable_cells_by_fake_pawn: list[tuple[dict, int]] = self.is_reachable(fake_pawn, board)
+                get_informations_about_the_potential_cell: tuple[dict, int] = board.get_cell(board.board, fake_cell_index)
+                
+                if get_informations_about_the_potential_cell in reachable_cells_by_fake_pawn and get_informations_about_the_potential_cell[0]["cell_is_empty"] == True:
+                    
+                    # Update informations about the actual cell
+                    informations_about_the_actual_cell[0]["cell_is_empty"] = True
+                    informations_about_the_actual_cell[0]["cell_owner"] = 0
+                    
+                    # Update the pawn informations (position and gui)
+                    pawn[0]["pawn_row"] = fake_cell_index[0]
+                    pawn[0]["pawn_col"] = fake_cell_index[1]
+                    pawn[0]["pawn_pos"] = [pawn[0]["pawn_row"], pawn[0]["pawn_col"]]
+                    pawn[0]["pawn_gui"].x = get_informations_about_the_potential_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
+                    pawn[0]["pawn_gui"].y = get_informations_about_the_potential_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
+                    
+                    # Update informations about the dead pawn
+                    self.take_pawn(ennemy_pawns, list(move_to))
+                    
+                    # Update informations about the destination cell
+                    informations_about_the_destination_cell[0]["cell_is_empty"] = True
+                    informations_about_the_destination_cell[0]["cell_owner"] = 0
+                    
+                    print(True)
+                else:
+                    print(False)
+                
             else:
                 return False
         else:
             return False
+
+    def take_pawn(self, pawns: list[dict], pawn_pos: list[int, str]):
+        pawn_to_take: tuple[dict, int] = self.get_pawn(pawns, pawn_pos)
+        if None not in pawn_to_take:
+            pawn_to_take[0]["pawn_status"] = "dead"
+            pawn_to_take[0]["pawn_row"] = None
+            pawn_to_take[0]["pawn_col"] = None
+            pawn_to_take[0]["pawn_pos"] = None
+            pawn_to_take[0]["pawn_gui"] = None
+        else:
+            print(False)
     
     def gui_pawns(self, pawns: list[dict], board: list[dict]) -> None:
         """_summary_: this function will create the gui for the pawns
