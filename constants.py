@@ -28,6 +28,9 @@ GUI_PAWN_SIZE: int = 25
 GUI_PAWN_COLOR_1: tuple[int, int, int] = (0,0,255)
 GUI_PAWN_COLOR_2: tuple[int, int, int] = (255,0,0)
 
+GUI_KING_COLOR_1: tuple[int, int, int] = (60,125,255)
+GUI_KING_COLOR_2: tuple[int, int, int] = (255,125,60)
+
 #    PYGAME
 GAME_NAME: str = "Checkers"
 WIDTH: int = BOARD_SIZE*GUI_CELL_SIZE

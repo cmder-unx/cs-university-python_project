@@ -127,7 +127,10 @@ class Pawns:
             # if the pawn is a king in addition to the 2 different way for the basic pawn, 
             # we will compute the 2 other different way
             if pawn_type == "King":
-                reach_bottom_left_cell: tuple[int, str] = (row_bottom if pawn_owner == 1 else row_top, columns[column_left])
+                if column_left >= 0:
+                    reach_bottom_left_cell: tuple[int, str] = (row_bottom if pawn_owner == 1 else row_top, columns[column_left])
+                else:
+                    reach_bottom_left_cell: tuple[int, str] = (None, None)
                 if column_right < len(columns):
                     reach_bottom_right_cell: tuple[int, str] = (row_bottom if pawn_owner == 1 else row_top, columns[column_right])
                 else:
@@ -173,8 +176,8 @@ class Pawns:
             if informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_is_empty"] == True and informations_about_the_destination_cell[0]["cell_owner"] == 0: # if the destination cell is reachable and empty (has no owner)
                 
                 # Update informations about the actual cell
-                board.board[informations_about_the_actual_cell[1]]["cell_is_empty"] = True
-                board.board[informations_about_the_actual_cell[1]]["cell_owner"] = 0
+                informations_about_the_actual_cell[0]["cell_is_empty"] = True
+                informations_about_the_actual_cell[0]["cell_owner"] = 0
                 
                 # Update the pawn informations (position and gui)
                 pawn[0]["pawn_row"] = move_to[0]
@@ -183,9 +186,16 @@ class Pawns:
                 pawn[0]["pawn_gui"].x = informations_about_the_destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
                 pawn[0]["pawn_gui"].y = informations_about_the_destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
                 
+                # Pawn becomes a king
+                if self.player_id == 1 and move_to[0] == 0:
+                    pawn[0]["pawn_type"] = "King"
+                elif self.player_id == 2 and move_to[0] == BOARD_SIZE-1:
+                    pawn[0]["pawn_type"] = "King"
+                
                 # Update informations about the destination cell
-                board.board[informations_about_the_destination_cell[1]]["cell_is_empty"] = False
-                board.board[informations_about_the_destination_cell[1]]["cell_owner"] = pawn[0]["pawn_owner"]
+                informations_about_the_destination_cell[0]["cell_is_empty"] = False
+                informations_about_the_destination_cell[0]["cell_owner"] = pawn[0]["pawn_owner"]
+                
                 return True
             elif informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_owner"] != self.player_id and informations_about_the_destination_cell[0]["cell_owner"] != 0:
                 
@@ -215,8 +225,8 @@ class Pawns:
                 if get_informations_about_the_potential_cell in reachable_cells_by_fake_pawn and get_informations_about_the_potential_cell[0]["cell_is_empty"] == True:
                     
                     # Update informations about the actual cell
-                    board.board[informations_about_the_actual_cell[1]]["cell_is_empty"] = True
-                    board.board[informations_about_the_actual_cell[1]]["cell_owner"] = 0
+                    informations_about_the_actual_cell[0]["cell_is_empty"] = True
+                    informations_about_the_actual_cell[0]["cell_owner"] = 0
                     
                     # Update the pawn informations (position and gui)
                     pawn[0]["pawn_row"] = fake_cell_index[0]
@@ -225,18 +235,24 @@ class Pawns:
                     pawn[0]["pawn_gui"].x = get_informations_about_the_potential_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
                     pawn[0]["pawn_gui"].y = get_informations_about_the_potential_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
                     
+                    # Pawn becomes a king
+                    if self.player_id == 1 and move_to[0] == 0:
+                        pawn[0]["pawn_type"] = "King"
+                    elif self.player_id == 2 and move_to[0] == BOARD_SIZE-1:
+                        pawn[0]["pawn_type"] = "King"
+                    
                     # Update informations about the dead pawn
                     self.take_pawn(ennemy_pawns, list(move_to))
                     
                     # Update informations about the destination cell
-                    board.board[informations_about_the_destination_cell[1]]["cell_is_empty"] = True
-                    board.board[informations_about_the_destination_cell[1]]["cell_owner"] = 0
+                    informations_about_the_destination_cell[0]["cell_is_empty"] = True
+                    informations_about_the_destination_cell[0]["cell_owner"] = 0
                     
                     # Update informations about the destination cell the real this time
-                    board.board[get_informations_about_the_potential_cell[1]]["cell_is_empty"] = False
-                    board.board[get_informations_about_the_potential_cell[1]]["cell_owner"] = pawn[0]["pawn_owner"]
+                    get_informations_about_the_potential_cell[0]["cell_is_empty"] = False
+                    get_informations_about_the_potential_cell[0]["cell_owner"] = pawn[0]["pawn_owner"]
                     
-                    print(True)
+                    return True
                 else:
                     print(False)
                 
@@ -279,5 +295,8 @@ class Pawns:
         """        
         for pawn in pawns:
             if pawn["pawn_gui"] != None:
-                color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if pawn["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
+                if pawn["pawn_type"] == "Pawn":
+                    color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if pawn["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
+                elif pawn["pawn_type"] == "King":
+                    color: tuple[int, int, int] = GUI_KING_COLOR_1 if pawn["pawn_owner"] == 1 else GUI_KING_COLOR_2
                 pygame.draw.circle(screen, color, (pawn["pawn_gui"].x, pawn["pawn_gui"].y), pawn["pawn_gui"].width)
