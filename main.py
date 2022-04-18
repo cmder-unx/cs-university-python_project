@@ -4,7 +4,9 @@ from constants import *
 from typing import *
 
 def main() -> None:
-    Game().gameloop()
+    print("SERVER IP : ")
+    server_ip: str = input()
+    Game(server_ip).gameloop()
 
 if __name__ == "__main__":
     main()

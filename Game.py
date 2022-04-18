@@ -1,18 +1,26 @@
+from Client import Client
 import pygame, sys
 from Board import Board
 from Pawns import Pawns
 from constants import *
 from typing import *
+import pickle
+import threading
 
 class Game:
     
-    def __init__(self) -> None:
+    def __init__(self, server_ip: str) -> None:
         pygame.init() # Initialize pygame
+        
+        # Network
+        self.server_ip = server_ip
+        self.client = Client(self.server_ip, 6000)
+        self.receive_data: bool = True
         
         # Initialize the game
         self.board: Board = Board(BOARD_SIZE, BOARD_COLUMNS) # Initialize the checkers board
-        self.player1: list[dict] = Pawns(1, self.board.board) # Initialize pawns for player 1
-        self.player2: list[dict] = Pawns(2, self.board.board) # Initialize pawns for player 2
+        self.player1: Pawns = Pawns(1, self.board.board) # Initialize pawns for player 1
+        self.player2: Pawns = Pawns(2, self.board.board) # Initialize pawns for player 2
         
         self.turn: int = 0 # The turn of the game when turn%2 == 0, it's player 1's turn when turn%2 == 1, it's player 2's turn
         self.selected_pawn: tuple[dict, int] = None # Will contain the pawn that is currently selected
@@ -31,12 +39,23 @@ class Game:
         window.fill(color)
         print(clock.get_fps()) if show_fps else None
     
+    def receive_data_network(self):
+        while self.receive_data:
+            data: tuple[int, list[dict], list[dict]] = self.client.receive()
+            if data:
+                self.turn = data[0]
+                self.player1.player_pawns = data[1]
+                self.player2.player_pawns = data[2]
+    
     def gameloop(self) -> None:
         """_summary_: The main loop of the game
 
         """
+        receive_data_netw = threading.Thread(target=self.receive_data_network)
+        receive_data_netw.start()
         game_running = True
         while game_running:
+            
             mouse_position: tuple[int, int] = pygame.mouse.get_pos() # Get the current mouse position in a tuple (x, y)
             for event in pygame.event.get():
                 """
@@ -68,6 +87,9 @@ class Game:
                                         self.reachable_cells_by_pawn = None
                                         self.selected_pawn = None
                                         self.turn+=1
+                                        data_to_send = (self.turn, self.player1.player_pawns, self.player2.player_pawns)
+                                        self.client.send(data_to_send)
+                                        print(data_to_send)
                     else: # Check if it's player 2's turn
                         for cell in self.board.board:
                             # For each cell in the board we check if the user click on it and if it contains a pawn
@@ -89,11 +111,14 @@ class Game:
                                         self.reachable_cells_by_pawn = None
                                         self.selected_pawn = None
                                         self.turn+=1
+                                        data_to_send = (self.turn, self.player1.player_pawns, self.player2.player_pawns)
+                                        self.client.send(data_to_send)
                 """
                 -----------------------------------END TEST-------------------------------------
                 ################################################################################
                 """
                 if event.type == pygame.QUIT:
+                    self.receive_data = False
                     pygame.quit()
                     sys.exit()
             
@@ -118,7 +143,6 @@ class Game:
             -----------------------------------END TEST-------------------------------------
             ################################################################################
             """
-            
             
             CLOCK.tick(FPS) # Set the framerate of the window
             self.window_update(WINDOW, BLACK, CLOCK, False) # Update the window
