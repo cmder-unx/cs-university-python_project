@@ -49,11 +49,13 @@ class Game:
                 self.turn = data[0]
                 self.player1.player_pawns = data[1]
                 self.player2.player_pawns = data[2]
+                self.board.board = data[3]
     
     def gameloop(self) -> None:
         """_summary_: The main loop of the game
 
         """
+        trame: int = 0 #ONLY FOR DEBUG
         receive_data_netw = threading.Thread(target=self.receive_data_network)
         receive_data_netw.start()
         game_running = True
@@ -86,13 +88,14 @@ class Game:
                                 if self.reachable_cells_by_pawn != None:
                                     if self.board.get_cell(self.board.board, cell["cell_index"]) in self.reachable_cells_by_pawn:
                                         self.player1.move_pawn(self.player2.player_pawns, self.selected_pawn, cell["cell_index"], self.board) if self.player_current_id == 0 else self.player2.move_pawn(self.player1.player_pawns, self.selected_pawn, cell["cell_index"], self.board)
-                                        print(cell)
+                                        #print(cell)
                                         self.reachable_cells_by_pawn = None
                                         self.selected_pawn = None
                                         self.turn+=1
-                                        data_to_send = (self.turn, self.player1.player_pawns, self.player2.player_pawns)
+                                        data_to_send = (self.turn, self.player1.player_pawns, self.player2.player_pawns, self.board.board)
                                         self.client.send(data_to_send)
-                                        print(data_to_send)
+                                        print(f"TRAME {trame} :\n{data_to_send}\n\n")
+                                        trame+=1
                 """
                 -----------------------------------END TEST-------------------------------------
                 ################################################################################

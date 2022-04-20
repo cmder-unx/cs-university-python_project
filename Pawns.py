@@ -85,6 +85,18 @@ class Pawns:
                 end_index_of_the_pawns_list-=1
         return None, None
     
+    def _traverse_top_right(self):
+        pass
+    
+    def _traverse_top_left(self):
+        pass
+    
+    def _traverse_bot_right(self):
+        pass
+    
+    def _traverse_bot_left(self):
+        pass
+    
     def is_reachable(self, pawn: tuple[dict, int], board: Board) -> list[tuple[dict, int]]:
         """_summary_: this function will return the list of cells (with their informations and index in the board list) 
                         that are reachable by the pawn
