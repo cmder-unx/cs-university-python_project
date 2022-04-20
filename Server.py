@@ -21,7 +21,9 @@ class Server:
     
     def manage_client(self, client_socket, addr):
         connected = True
-        self.clients_list.append((client_socket, addr))
+        client_id: int = len(self.clients_list)
+        self.clients_list.append((client_id, client_socket, addr))
+        client_socket.sendall(pickle.dumps(client_id))
         print(f"{ addr } CONNECTED")
         print(f"Number of clients connected : { len(self.clients_list) }")
         while connected:
@@ -29,17 +31,17 @@ class Server:
                 data = pickle.loads(client_socket.recv(self.HEADER))
                 reply = pickle.dumps(data)
                 if not data:
-                    self.clients_list.remove(self.clients_list[self.clients_list.index((client_socket, addr))])
+                    self.clients_list.remove(self.clients_list[self.clients_list.index((client_id, client_socket, addr))])
                     print(f"Number of waiting clients connected : { len(self.clients_list) }")
                     print("DISCONNECTED")
                     break
                 else:
                     print(f"Received : {data} from : {client_socket}")
                     for client in self.clients_list:
-                        client[0].sendall(reply)
-                        print(f"Sending : {reply} to : {client[0]}")
+                        client[1].sendall(reply)
+                        print(f"Sending : {reply} to : {client[1]}")
             except:
-                self.clients_list.remove(self.clients_list[self.clients_list.index((client_socket, addr))])
+                self.clients_list.remove(self.clients_list[self.clients_list.index((client_id, client_socket, addr))])
                 
                 #-MESSAGES DISPLAY
                 print("LOST CONNECTION")
