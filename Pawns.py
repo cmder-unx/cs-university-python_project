@@ -1,8 +1,12 @@
 from datetime import datetime
+import sys
+from turtle import right
 import pygame
 from Board import Board
 from constants import *
 from typing import *
+
+#sys.setrecursionlimit(15000)
 
 class Pawns:
     
@@ -85,20 +89,92 @@ class Pawns:
                 end_index_of_the_pawns_list-=1
         return None, None
     
-    def _traverse_top_right(self):
-        pass
+    def get_valid_moves(self, pawn: tuple[dict, int], board: Board):
+        moves: dict = {}
+        left: int = BOARD_COLUMNS.index(pawn[0]["pawn_col"]) - 1
+        right: int = BOARD_COLUMNS.index(pawn[0]["pawn_col"]) + 1
+        row: int = pawn[0]["pawn_row"]
+        
+        if pawn[0]["pawn_owner"] == 1 or pawn[0]["pawn_type"] == "King":
+            moves.update(self._traverse_left(row-1, max(row-3, -1), -1, pawn[0]["pawn_owner"], board, left, skipped=[]))
+            moves.update(self._traverse_right(row-1, max(row-3, -1), -1, pawn[0]["pawn_owner"], board, right, skipped=[]))
+        
+        if pawn[0]["pawn_owner"] == 2 or pawn[0]["pawn_type"] == "King":
+            moves.update(self._traverse_left(row+1, min(row+3, BOARD_SIZE-1), 1, pawn[0]["pawn_owner"], board, left, skipped=[]))
+            moves.update(self._traverse_right(row+1, min(row+3, BOARD_SIZE-1), 1, pawn[0]["pawn_owner"], board, right, skipped=[]))
+        
+        return moves
     
-    def _traverse_top_left(self):
-        pass
+    def _traverse_left(self, start, stop, step, color, board: Board, left, skipped=[]):
+        moves = {}
+        last = []
+        
+        for row in range(start, stop, step):
+            if left < 0:
+                break
+            
+            current_cell = board.get_cell(board.board, (row, BOARD_COLUMNS[left]))
+            if current_cell[0]["cell_is_empty"] == True:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    moves[(row, left)] = last + skipped
+                else:
+                    moves[(row, left)] = last
+                
+                if last:
+                    if step == -1:
+                        row_range = max(row-3, 0)
+                    else:
+                        row_range = min(row+3, BOARD_SIZE-1)
+                    moves.update(self._traverse_left(row+step, row_range, step, color, board, left-1, skipped=last))
+                    moves.update(self._traverse_right(row+step, row_range, step, color, board, left+1, skipped=last))
+                break
+            elif current_cell[0]["cell_owner"] == self.player_id:
+                break
+            else:
+                last = [current_cell]
+            
+            left -= 1
+        
+        return moves
     
-    def _traverse_bot_right(self):
-        pass
-    
-    def _traverse_bot_left(self):
-        pass
+    def _traverse_right(self, start, stop, step, color, board: Board, right, skipped=[]):
+        moves = {}
+        last = []
+        
+        for row in range(start, stop, step):
+            if right >= len(BOARD_COLUMNS):
+                break
+            
+            current_cell = board.get_cell(board.board, (row, BOARD_COLUMNS[right]))
+            if current_cell[0]["cell_is_empty"] == True:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    moves[(row, right)] = last + skipped
+                else:
+                    moves[(row, right)] = last
+                
+                if last:
+                    if step == -1:
+                        row_range = max(row-3, 0)
+                    else:
+                        row_range = min(row+3, BOARD_SIZE-1)
+                    moves.update(self._traverse_left(row+step, row_range, step, color, board, right-1, skipped=last))
+                    moves.update(self._traverse_right(row+step, row_range, step, color, board, right+1, skipped=last))
+                break
+            elif current_cell[0]["cell_owner"] == self.player_id:
+                break
+            else:
+                last = [current_cell]
+            
+            right += 1
+        
+        return moves
     
     def is_reachable(self, pawn: tuple[dict, int], board: Board) -> list[tuple[dict, int]]:
-        """_summary_: this function will return the list of cells (with their informations and index in the board list) 
+        """_summary_: this function will return the list of cells (with their information and index in the board list) 
                         that are reachable by the pawn
 
         Args:
@@ -312,3 +388,15 @@ class Pawns:
                 elif pawn["pawn_type"] == "King":
                     color: tuple[int, int, int] = GUI_KING_COLOR_1 if pawn["pawn_owner"] == 1 else GUI_KING_COLOR_2
                 pygame.draw.circle(screen, color, (pawn["pawn_gui"].x, pawn["pawn_gui"].y), pawn["pawn_gui"].width)
+
+
+if __name__ == "__main__":
+    board = Board(BOARD_SIZE, BOARD_COLUMNS)
+    pawn = Pawns(1, board.board)
+    pawn2 = Pawns(2, board.board)
+    
+    print("\n")
+    
+    print(pawn.get_valid_moves(pawn.get_pawn(pawn.player_pawns, [6, "F"]), board))
+    
+    #print(pawn.paths((5, "E"), board))

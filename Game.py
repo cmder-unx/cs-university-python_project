@@ -28,6 +28,8 @@ class Game:
         self.turn: int = 0 # The turn of the game when turn%2 == 0, it's player 1's turn when turn%2 == 1, it's player 2's turn
         self.selected_pawn: tuple[dict, int] = None # Will contain the pawn that is currently selected
         self.reachable_cells_by_pawn: list[tuple[dict, int]] = None # Will contain the reachable cells by the pawn
+        
+        self.valid_moves: dict = {} # Will contain the valid moves for the pawn
     
     def window_update(self, window: pygame.Surface, color: tuple[int, int, int], clock: pygame.time.Clock, show_fps: bool) -> None:
         """_summary_: Update the window
@@ -76,25 +78,38 @@ class Game:
                             # For each cell in the board we check if the user click on it and if it contains a pawn
                             if cell["cell_gui"].collidepoint(mouse_position) and not cell["cell_is_empty"] and cell["cell_owner"] == self.player_current_id+1:
                                 # Get informations about the pawn that is currently on cell that the user clicked
-                                self.selected_pawn: tuple[dict, int] = self.player1.get_pawn(self.player1.player_pawns, list(cell["cell_index"])) if self.player_current_id == 0 else self.player2.get_pawn(self.player2.player_pawns, list(cell["cell_index"]))
+                                if self.player_current_id == 0:
+                                    self.selected_pawn: tuple[dict, int] = self.player1.get_pawn(self.player1.player_pawns, list(cell["cell_index"]))
+                                else:
+                                    self.selected_pawn: tuple[dict, int] = self.player2.get_pawn(self.player2.player_pawns, list(cell["cell_index"]))
+                                
                                 if None not in self.selected_pawn: # If the pawn exists
                                     if self.selected_pawn[0]["pawn_status"] == "alive": # Check if the pawn is alive
                                         # Get the reachable cells by the pawn and store it in the variable reachable_cells_by_pawn 
                                         # that we initialized before to None
-                                        self.reachable_cells_by_pawn: list[tuple[dict, int]] = self.player1.is_reachable(self.selected_pawn, self.board) if self.player_current_id == 0 else self.player2.is_reachable(self.selected_pawn, self.board)
+                                        if self.player_current_id == 0:
+                                            self.reachable_cells_by_pawn: list[tuple[dict, int]] = self.player1.is_reachable(self.selected_pawn, self.board)
+                                            self.valid_moves = self.player1.get_valid_moves(self.selected_pawn, self.board)
+                                        else:
+                                            self.reachable_cells_by_pawn: list[tuple[dict, int]] = self.player2.is_reachable(self.selected_pawn, self.board)
+                                            self.valid_moves = self.player2.get_valid_moves(self.selected_pawn, self.board)
                                 else:
                                     self.reachable_cells_by_pawn = None # If the pawn doesn't exist, the reachable cells will be reset
                             elif cell["cell_gui"].collidepoint(mouse_position) and cell["cell_owner"] != self.player_current_id+1:
                                 if self.reachable_cells_by_pawn != None:
                                     if self.board.get_cell(self.board.board, cell["cell_index"]) in self.reachable_cells_by_pawn:
-                                        self.player1.move_pawn(self.player2.player_pawns, self.selected_pawn, cell["cell_index"], self.board) if self.player_current_id == 0 else self.player2.move_pawn(self.player1.player_pawns, self.selected_pawn, cell["cell_index"], self.board)
+                                        if self.player_current_id == 0:
+                                            self.player1.move_pawn(self.player2.player_pawns, self.selected_pawn, cell["cell_index"], self.board)
+                                        else:
+                                            self.player2.move_pawn(self.player1.player_pawns, self.selected_pawn, cell["cell_index"], self.board)
                                         #print(cell)
                                         self.reachable_cells_by_pawn = None
+                                        self.valid_moves = {}
                                         self.selected_pawn = None
                                         self.turn+=1
                                         data_to_send = (self.turn, self.player1.player_pawns, self.player2.player_pawns, self.board.board)
                                         self.client.send(data_to_send)
-                                        print(f"TRAME {trame} :\n{data_to_send}\n\n")
+                                        #print(f"TRAME {trame} :\n{data_to_send}\n\n")
                                         trame+=1
                 """
                 -----------------------------------END TEST-------------------------------------
@@ -114,14 +129,21 @@ class Game:
             --------------------------------------TEST--------------------------------------
             If the reachable cells by the pawn is not None, we will draw a little circle over the reachable cells
             """
+            for moves in self.valid_moves:
+                row, col = moves
+                reachable_cell_gui_indicator_color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if self.selected_pawn[0]["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
+                reachable_cell_gui_indicator_position: tuple[int, int] = (self.board.get_cell(self.board.board, (row, BOARD_COLUMNS[col]))[0]["cell_gui"].x+GUI_CELL_SIZE//2, self.board.get_cell(self.board.board, (row, BOARD_COLUMNS[col]))[0]["cell_gui"].y+GUI_CELL_SIZE//2)
+                reachable_cell_gui_indicator_size: int = 10
+                pygame.draw.circle(WINDOW, reachable_cell_gui_indicator_color, reachable_cell_gui_indicator_position, reachable_cell_gui_indicator_size)
+                
             #THIS IS CURRENTLY A TEST - SO IT WILL BE CLEANER LATER
-            if self.reachable_cells_by_pawn:
-                for reachable_cell in self.reachable_cells_by_pawn:
-                    reachable_cell_gui_indicator_color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if self.selected_pawn[0]["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
-                    reachable_cell_gui_indicator_position: tuple[int, int] = (reachable_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2, reachable_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2)
-                    reachable_cell_gui_indicator_size: int = 10
+            #if self.reachable_cells_by_pawn:
+            #    for reachable_cell in self.reachable_cells_by_pawn:
+            #        reachable_cell_gui_indicator_color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if self.selected_pawn[0]["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
+            #        reachable_cell_gui_indicator_position: tuple[int, int] = (reachable_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2, reachable_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2)
+            #        reachable_cell_gui_indicator_size: int = 10
                     #print(reachable_cell_gui_indicator_color)
-                    pygame.draw.circle(WINDOW, reachable_cell_gui_indicator_color, reachable_cell_gui_indicator_position, reachable_cell_gui_indicator_size)
+            #        pygame.draw.circle(WINDOW, reachable_cell_gui_indicator_color, reachable_cell_gui_indicator_position, reachable_cell_gui_indicator_size)
             """
             -----------------------------------END TEST-------------------------------------
             ################################################################################
