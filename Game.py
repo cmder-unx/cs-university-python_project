@@ -4,7 +4,7 @@ from Board import Board
 from Pawns import Pawns
 from constants import *
 from typing import *
-import pickle
+from GUI import GUI
 import threading
 
 class Game:
@@ -18,6 +18,8 @@ class Game:
         self.receive_data: bool = True
         
         # Initialize the game
+        self.GUI = GUI()
+        
         self.board: Board = Board(BOARD_SIZE, BOARD_COLUMNS) # Initialize the checkers board
         self.player1: Pawns = Pawns(1, self.board.board) # Initialize pawns for player 1
         self.player2: Pawns = Pawns(2, self.board.board) # Initialize pawns for player 2
@@ -120,9 +122,9 @@ class Game:
                     pygame.quit()
                     sys.exit()
             
-            self.board.draw_gui_board(WINDOW, self.board.board) # Draw the board
-            self.player1.draw_gui_pawns(WINDOW, self.player1.player_pawns) # Draw the pawns of player 1
-            self.player2.draw_gui_pawns(WINDOW, self.player2.player_pawns) # Draw the pawns of player 2
+            self.GUI.draw_gui_board(WINDOW, self.board.board) # Draw the board
+            self.GUI.draw_gui_pawns(WINDOW, self.player1.player_pawns) # Draw the pawns of player 1
+            self.GUI.draw_gui_pawns(WINDOW, self.player2.player_pawns) # Draw the pawns of player 2
             
             """
             ################################################################################
@@ -142,7 +144,7 @@ class Game:
             #        reachable_cell_gui_indicator_color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if self.selected_pawn[0]["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
             #        reachable_cell_gui_indicator_position: tuple[int, int] = (reachable_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2, reachable_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2)
             #        reachable_cell_gui_indicator_size: int = 10
-                    #print(reachable_cell_gui_indicator_color)
+            #        print(reachable_cell_gui_indicator_color)
             #        pygame.draw.circle(WINDOW, reachable_cell_gui_indicator_color, reachable_cell_gui_indicator_position, reachable_cell_gui_indicator_size)
             """
             -----------------------------------END TEST-------------------------------------

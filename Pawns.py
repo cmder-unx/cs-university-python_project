@@ -1,7 +1,4 @@
-from datetime import datetime
-import sys
-from turtle import right
-import pygame
+from GUI import GUI
 from Board import Board
 from constants import *
 from typing import *
@@ -22,7 +19,7 @@ class Pawns:
         # pawn_gui: the gui of the pawn
         self.player_pawns: list[dict] = self.create_player_pawns() 
         
-        self.gui_pawns(self.player_pawns, self.board) # Create the gui for the pawns (GUI = Graphical User Interface)
+        GUI().gui_pawns(self.player_pawns, self.board) # Create the gui for the pawns (GUI = Graphical User Interface)
     
     def create_player_pawns(self) -> list[dict]:
         """_summary_: this function will create the pawns for the player as a list of dictionnaries
@@ -360,34 +357,6 @@ class Pawns:
         else:
             print(False)
     
-    def gui_pawns(self, pawns: list[dict], board: list[dict]) -> None:
-        """_summary_: this function will create the gui for the pawns
-
-        Args:
-            pawns (list[dict]): list of pawns
-            board (list[dict]): the board and all cells
-        """        
-        for pawn in pawns:
-            for cell in board:
-                if cell["cell_row"] == pawn["pawn_row"] and cell["cell_col"] == pawn["pawn_col"]:
-                    pawn_gui_position: tuple[int, int] = (cell["cell_gui"].x+GUI_CELL_SIZE//2, cell["cell_gui"].y+GUI_CELL_SIZE//2)
-                    pawn_gui_size: tuple[int, int] = (GUI_PAWN_SIZE, GUI_PAWN_SIZE)
-                    pawn["pawn_gui"] = pygame.Rect(pawn_gui_position, pawn_gui_size)
-    
-    def draw_gui_pawns(self, screen: pygame.Surface, pawns: list[dict]) -> None:
-        """_summary_: this function will draw the gui for the pawns
-
-        Args:
-            screen (pygame.Surface): the screen where we want to draw the gui for the pawns, here the screen will be WINDOW constant, see constants.py for more info
-            pawns (list[dict]): the list of pawns
-        """        
-        for pawn in pawns:
-            if pawn["pawn_gui"] != None:
-                if pawn["pawn_type"] == "Pawn":
-                    color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if pawn["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
-                elif pawn["pawn_type"] == "King":
-                    color: tuple[int, int, int] = GUI_KING_COLOR_1 if pawn["pawn_owner"] == 1 else GUI_KING_COLOR_2
-                pygame.draw.circle(screen, color, (pawn["pawn_gui"].x, pawn["pawn_gui"].y), pawn["pawn_gui"].width)
 
 
 if __name__ == "__main__":

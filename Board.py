@@ -1,4 +1,4 @@
-import pygame
+from GUI import GUI
 from constants import *
 from typing import *
 
@@ -13,7 +13,7 @@ class Board:
         # cell_row, cell_col, cell_index, cell_color, cell_is_empty, cell_owner, cell_gui
         self.board: list[dict] = self.create_board()
         
-        self.gui_board(self.board) # Create the gui board (GUI = Graphical User Interface)
+        GUI().gui_board(self.board) # Create the gui board (GUI = Graphical User Interface)
     
     def __repr__(self) -> str:
         """_summary_ : this function will return a string containing the representation of the board in its raw form
@@ -93,25 +93,4 @@ class Board:
             else:
                 end_index_of_the_board-=1
         return None, None
-    
-    def gui_board(self, board: list[dict]) -> None:
-        """_summary_: this function will create the gui board (GUI = Graphical User Interface), adding the rectangles to each cell of the board
 
-        Args:
-            board (list[dict]): the board with all the cells
-        """        
-        for cell_dict in board:
-            cell_gui_position: tuple[int, int] = (BOARD_COLUMNS.index(cell_dict["cell_col"]) * GUI_CELL_SIZE, cell_dict["cell_row"] * GUI_CELL_SIZE)
-            cell_gui_size: tuple[int, int] = (GUI_CELL_SIZE, GUI_CELL_SIZE)
-            cell_dict["cell_gui"] = pygame.Rect(cell_gui_position, cell_gui_size) # create the gui of the cell, the gui is a rectangle
-    
-    def draw_gui_board(self, screen: pygame.Surface, board: list[dict]) -> None:
-        """_summary_: this function will draw the gui board (GUI = Graphical User Interface) on the screen
-
-        Args:
-            screen (pygame.Surface): the screen where we want to draw the gui board, here the screen will be WINDOW constant, see constants.py for more info
-            board (list[dict]): the board with all the cells
-        """        
-        for cell_dict in board:
-            color: tuple[int, int, int] = GUI_CELL_COLOR_1 if cell_dict["cell_color"] == CELL_COLOR_1 else GUI_CELL_COLOR_2
-            pygame.draw.rect(screen, color, cell_dict["cell_gui"])
