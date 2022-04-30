@@ -52,3 +52,18 @@ class GUI:
         for cell_dict in board:
             color: tuple[int, int, int] = GUI_CELL_COLOR_1 if cell_dict["cell_color"] == CELL_COLOR_1 else GUI_CELL_COLOR_2
             pygame.draw.rect(screen, color, cell_dict["cell_gui"])
+    
+    def draw_gui_reachable_cells(self, screen: pygame.Surface, reachable_cells_by_pawn: dict, selected_pawn: tuple[dict, int], board) -> None:
+        """_summary_: this function will draw the reachable cells
+
+        Args:
+            screen (pygame.Surface): the screen where we want to draw the reachable cells, here the screen will be WINDOW constant, see constants.py for more info
+            reachable_cells_by_pawn (dict): the dict of reachable cells
+        """        
+        if reachable_cells_by_pawn:
+            for move in reachable_cells_by_pawn:
+                row, col = move
+                reachable_cell_gui_indicator_color: tuple[int, int, int] = GUI_PAWN_COLOR_1 if selected_pawn[0]["pawn_owner"] == 1 else GUI_PAWN_COLOR_2
+                reachable_cell_gui_indicator_position: tuple[int, int] = (board.get_cell(board.board, (row, col))[0]["cell_gui"].x+GUI_CELL_SIZE//2, board.get_cell(board.board, (row, col))[0]["cell_gui"].y+GUI_CELL_SIZE//2)
+                reachable_cell_gui_indicator_size: int = 10
+                pygame.draw.circle(screen, reachable_cell_gui_indicator_color, reachable_cell_gui_indicator_position, reachable_cell_gui_indicator_size)

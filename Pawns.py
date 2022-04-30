@@ -3,8 +3,6 @@ from Board import Board
 from constants import *
 from typing import *
 
-#sys.setrecursionlimit(15000)
-
 class Pawns:
     
     def __init__(self, player_id: int, board: list[dict]) -> None:
@@ -92,17 +90,23 @@ class Pawns:
         right: int = BOARD_COLUMNS.index(pawn[0]["pawn_col"]) + 1
         row: int = pawn[0]["pawn_row"]
         
-        if pawn[0]["pawn_owner"] == 1 or pawn[0]["pawn_type"] == "King":
-            moves.update(self._traverse_left(row-1, max(row-3, -1), -1, pawn[0]["pawn_owner"], board, left, skipped=[]))
-            moves.update(self._traverse_right(row-1, max(row-3, -1), -1, pawn[0]["pawn_owner"], board, right, skipped=[]))
+        if pawn[0]["pawn_owner"] == 1 and pawn[0]["pawn_type"] == "Pawn":
+            moves.update(self._traverse_left(row-1, max(row-3, -1), -1, board, left, skipped=[]))
+            moves.update(self._traverse_right(row-1, max(row-3, -1), -1, board, right, skipped=[]))
         
-        if pawn[0]["pawn_owner"] == 2 or pawn[0]["pawn_type"] == "King":
-            moves.update(self._traverse_left(row+1, min(row+3, BOARD_SIZE-1), 1, pawn[0]["pawn_owner"], board, left, skipped=[]))
-            moves.update(self._traverse_right(row+1, min(row+3, BOARD_SIZE-1), 1, pawn[0]["pawn_owner"], board, right, skipped=[]))
+        if pawn[0]["pawn_owner"] == 2 and pawn[0]["pawn_type"] == "Pawn":
+            moves.update(self._traverse_left(row+1, min(row+3, BOARD_SIZE), 1, board, left, skipped=[]))
+            moves.update(self._traverse_right(row+1, min(row+3, BOARD_SIZE), 1, board, right, skipped=[]))
+        
+        if pawn[0]["pawn_type"] == "King":
+            moves.update(self._traverse_left_king(row-1, -1, -1, board, left, skipped=[]))
+            moves.update(self._traverse_right_king(row-1, -1, -1, board, right, skipped=[]))
+            moves.update(self._traverse_left_king(row+1, BOARD_SIZE, 1, board, left, skipped=[]))
+            moves.update(self._traverse_right_king(row+1, BOARD_SIZE, 1, board, right, skipped=[]))
         
         return moves
     
-    def _traverse_left(self, start, stop, step, color, board: Board, left, skipped=[]):
+    def _traverse_left(self, start, stop, step, board: Board, left, skipped=[]):
         moves = {}
         last = []
         
@@ -115,17 +119,17 @@ class Pawns:
                 if skipped and not last:
                     break
                 elif skipped:
-                    moves[(row, left)] = last + skipped
+                    moves[(row, BOARD_COLUMNS[left])] = last + skipped
                 else:
-                    moves[(row, left)] = last
+                    moves[(row, BOARD_COLUMNS[left])] = last
                 
                 if last:
                     if step == -1:
                         row_range = max(row-3, 0)
                     else:
                         row_range = min(row+3, BOARD_SIZE-1)
-                    moves.update(self._traverse_left(row+step, row_range, step, color, board, left-1, skipped=last))
-                    moves.update(self._traverse_right(row+step, row_range, step, color, board, left+1, skipped=last))
+                    moves.update(self._traverse_left(row+step, row_range, step, board, left-1, skipped=last))
+                    moves.update(self._traverse_right(row+step, row_range, step, board, left+1, skipped=last))
                 break
             elif current_cell[0]["cell_owner"] == self.player_id:
                 break
@@ -136,7 +140,7 @@ class Pawns:
         
         return moves
     
-    def _traverse_right(self, start, stop, step, color, board: Board, right, skipped=[]):
+    def _traverse_right(self, start, stop, step, board: Board, right, skipped=[]):
         moves = {}
         last = []
         
@@ -149,17 +153,17 @@ class Pawns:
                 if skipped and not last:
                     break
                 elif skipped:
-                    moves[(row, right)] = last + skipped
+                    moves[(row, BOARD_COLUMNS[right])] = last + skipped
                 else:
-                    moves[(row, right)] = last
+                    moves[(row, BOARD_COLUMNS[right])] = last
                 
                 if last:
                     if step == -1:
                         row_range = max(row-3, 0)
                     else:
                         row_range = min(row+3, BOARD_SIZE-1)
-                    moves.update(self._traverse_left(row+step, row_range, step, color, board, right-1, skipped=last))
-                    moves.update(self._traverse_right(row+step, row_range, step, color, board, right+1, skipped=last))
+                    moves.update(self._traverse_left(row+step, row_range, step, board, right-1, skipped=last))
+                    moves.update(self._traverse_right(row+step, row_range, step, board, right+1, skipped=last))
                 break
             elif current_cell[0]["cell_owner"] == self.player_id:
                 break
@@ -170,181 +174,119 @@ class Pawns:
         
         return moves
     
-    def is_reachable(self, pawn: tuple[dict, int], board: Board) -> list[tuple[dict, int]]:
-        """_summary_: this function will return the list of cells (with their information and index in the board list) 
-                        that are reachable by the pawn
-
-        Args:
-            pawn (tuple[dict, int]): the pawn that we want to check the reachability
-            board (Board): the board initializer
-
-        Returns:
-            list[tuple[dict, int]]: the list of cells (with their informations and index in the board list) 
-                                    that are reachable by the pawn
-        """        
-        reachable_cells: list[tuple[dict, int]] = [] # will contain the cells that are reachable by the pawn
-        columns: list[str] = BOARD_COLUMNS
-        pawn_type: str = pawn[0]["pawn_type"]
-        pawn_owner:int = pawn[0]["pawn_owner"]
-        pawn_row: int = pawn[0]["pawn_row"]
-        pawn_col: int = columns.index(pawn[0]["pawn_col"])
+    def _traverse_left_king(self, start, stop, step, board: Board, left, skipped=[]):
+        moves = {}
+        last = []
         
-        for i in range(1, PAWN_MAX_RANGE+1 if pawn_type == "Pawn" else KING_MAX_RANGE+1): # change the range depending on the pawn type
-            row_top: int = pawn_row - i
-            row_bottom: int = pawn_row + i
-            column_left: int = pawn_col - i
-            column_right: int = pawn_col + i
+        for row in range(start, stop, step):
+            if left < 0:
+                break
             
-            # We will compute the reachable cells in 2 different ways if it's a basic pawn and 
-            # 4 different ways if it's a king 
-            # depending on the pawn type
-            # for basic pawn
-            if column_right < len(columns):
-                reach_top_right_cell: tuple[int, str] = (row_top if pawn_owner == 1 else row_bottom, columns[column_right])
-            else:
-                reach_top_right_cell: tuple[int, str] = (None, None)
-            
-            if column_left >= 0:
-                reach_top_left_cell: tuple[int, str] = (row_top if pawn_owner == 1 else row_bottom, columns[column_left])
-            else:
-                reach_top_left_cell: tuple[int, str] = (None, None)
-            
-            # if the pawn is a king in addition to the 2 different way for the basic pawn, 
-            # we will compute the 2 other different way
-            if pawn_type == "King":
-                if column_left >= 0:
-                    reach_bottom_left_cell: tuple[int, str] = (row_bottom if pawn_owner == 1 else row_top, columns[column_left])
+            current_cell = board.get_cell(board.board, (row, BOARD_COLUMNS[left]))
+            if current_cell[0]["cell_is_empty"] == True:
+                if skipped and not last:
+                    print(1)
+                    break
+                elif skipped:
+                    print(2)
+                    moves[(row, BOARD_COLUMNS[left])] = last + skipped
                 else:
-                    reach_bottom_left_cell: tuple[int, str] = (None, None)
-                if column_right < len(columns):
-                    reach_bottom_right_cell: tuple[int, str] = (row_bottom if pawn_owner == 1 else row_top, columns[column_right])
-                else:
-                    reach_bottom_right_cell: tuple[int, str] = (None, None)
-
-            # Get informations about the reachable cells
-            top_right_cell_informations: tuple[dict, int] = board.get_cell(board.board, reach_top_right_cell)
-            top_left_cell_informations: tuple[dict, int] = board.get_cell(board.board, reach_top_left_cell)
-
-            if None not in top_right_cell_informations: # if the cell exists we will add it to the reachable cells list
-                reachable_cells.append(top_right_cell_informations)
-            if None not in top_left_cell_informations:
-                reachable_cells.append(top_left_cell_informations)
-            
-            
-            if pawn_type == "King": # if the pawn is a king we will add the 2 other different way
-                # Get informations about the reachable cells
-                bottom_left_cell_informations: tuple[dict, int] = board.get_cell(board.board, reach_bottom_left_cell)
-                bottom_right_cell_informations: tuple[dict, int] = board.get_cell(board.board, reach_bottom_right_cell)
+                    print(3)
+                    moves[(row, BOARD_COLUMNS[left])] = last
                 
-                if None not in bottom_left_cell_informations: # if the cell exists we will add it to the reachable cells list
-                    reachable_cells.append(bottom_left_cell_informations)
-                if None not in bottom_right_cell_informations:
-                    reachable_cells.append(bottom_right_cell_informations)
+                if step == -1:
+                    row_range = max(row-3, 0)
+                else:
+                    row_range = min(row+3, BOARD_SIZE-1)
+                moves.update(self._traverse_left_king(row+step, row_range, step, board, left-1, skipped=last))
+                break
+            elif current_cell[0]["cell_owner"] == self.player_id:
+                break
+            else:
+                last = [current_cell]
+            
+            left -= 1
         
-        return reachable_cells
-
-    def move_pawn(self, ennemy_pawns:list[dict], pawn: tuple[dict, int], move_to: tuple[int, str], board: Board) -> bool:
-        """_summary_: this function will move the pawn to the cell that is passed in parameter and return True if the move has been done, False otherwise
-
-        Args:
-            pawns (list[dict]): list of pawns 
-            pawn (tuple[dict, int]): the pawn that we want to move
-            move_to (tuple[int, str]): the destination cell
-            board (Board): board initializer
-
-        Returns:
-            bool: boolean that will be True if the move has been done, False otherwise
-        """
-        informations_about_the_actual_cell: tuple[dict, int] = board.get_cell(board.board, tuple(pawn[0]["pawn_pos"])) # get the informations about the actual cell
-        informations_about_the_destination_cell: tuple[dict, int] = board.get_cell(board.board, move_to) # get the informations about the destination cell
-        if pawn[0]["pawn_pos"] != list(move_to): # if the pawn is not already in the destination cell
-            if informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_is_empty"] == True and informations_about_the_destination_cell[0]["cell_owner"] == 0: # if the destination cell is reachable and empty (has no owner)
+        return moves
+    
+    def _traverse_right_king(self, start, stop, step, board: Board, right, skipped=[]):
+        moves = {}
+        last = []
+        
+        for row in range(start, stop, step):
+            if right >= len(BOARD_COLUMNS):
+                break
+            
+            current_cell = board.get_cell(board.board, (row, BOARD_COLUMNS[right]))
+            if current_cell[0]["cell_is_empty"] == True:
+                if skipped and not last:
+                    print(5)
+                    break
+                elif skipped:
+                    print("LAST : ", last, "SKIPPED : ", skipped)
+                    moves[(row, BOARD_COLUMNS[right])] = last + skipped
+                else:
+                    print("LAST : ", last)
+                    moves[(row, BOARD_COLUMNS[right])] = last
                 
-                # Update informations about the actual cell
-                informations_about_the_actual_cell[0]["cell_is_empty"] = True
-                informations_about_the_actual_cell[0]["cell_owner"] = 0
+                if step == -1:
+                    row_range = max(row-3, 0)
+                else:
+                    row_range = min(row+3, BOARD_SIZE-1)
+                moves.update(self._traverse_right_king(row+step, row_range, step, board, right+1, skipped=last))
+                break
+            elif current_cell[0]["cell_owner"] == self.player_id:
+                break
+            else:
+                last = [current_cell]
+            
+            right += 1
+        
+        return moves
+
+    def move_pawn(self, pawn: tuple[dict, int], move_to: tuple[int, str], reachable_cells_by_pawn: dict, ennemy_pawns: list[dict], board: Board):
+        if move_to in reachable_cells_by_pawn:
+            current_cell: tuple[dict, int] = board.get_cell(board.board, tuple(pawn[0]["pawn_pos"]))
+            destination_cell: tuple[dict, int] = board.get_cell(board.board, move_to)
+            if not reachable_cells_by_pawn[move_to]:
+                current_cell[0]["cell_owner"] = 0
+                current_cell[0]["cell_is_empty"] = True
                 
-                # Update the pawn informations (position and gui)
-                pawn[0]["pawn_row"] = move_to[0]
-                pawn[0]["pawn_col"] = move_to[1]
-                pawn[0]["pawn_pos"] = [pawn[0]["pawn_row"], pawn[0]["pawn_col"]]
-                pawn[0]["pawn_gui"].x = informations_about_the_destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
-                pawn[0]["pawn_gui"].y = informations_about_the_destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
+                destination_cell[0]["cell_owner"] = self.player_id
+                destination_cell[0]["cell_is_empty"] = False
                 
-                # Pawn becomes a king
-                if self.player_id == 1 and move_to[0] == 0:
+                pawn[0]["pawn_row"], pawn[0]["pawn_col"] = move_to[0], move_to[1]
+                pawn[0]["pawn_pos"] = list(move_to)
+                pawn[0]["pawn_gui"].x = destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
+                pawn[0]["pawn_gui"].y = destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
+                
+                if self.player_id == 1 and pawn[0]["pawn_row"] == 0:
                     pawn[0]["pawn_type"] = "King"
-                elif self.player_id == 2 and move_to[0] == BOARD_SIZE-1:
+                elif self.player_id == 2 and pawn[0]["pawn_row"] == BOARD_SIZE-1:
                     pawn[0]["pawn_type"] = "King"
                 
-                # Update informations about the destination cell
-                informations_about_the_destination_cell[0]["cell_is_empty"] = False
-                informations_about_the_destination_cell[0]["cell_owner"] = pawn[0]["pawn_owner"]
-                
-                return True
-            elif informations_about_the_destination_cell in self.is_reachable(pawn, board) and informations_about_the_destination_cell[0]["cell_owner"] != self.player_id and informations_about_the_destination_cell[0]["cell_owner"] != 0:
-                
-                # We create a fake pawn to check if the pawn can be captured and the cell behind the pawn is empty and can be reached
-                fake_pawn: tuple[dict, int] = (pawn[0].copy(), None)
-                fake_pawn[0]["pawn_row"] = move_to[0]
-                fake_pawn[0]["pawn_col"] = move_to[1]
-                fake_pawn[0]["pawn_pos"] = [fake_pawn[0]["pawn_row"], fake_pawn[0]["pawn_col"]]
-                fake_pawn[0]["pawn_gui"] = None
-                
-                #define the direction of the destination cell and fake destination cell
-                if self.player_id == 1:
-                    if pawn[0]["pawn_row"]-1 == move_to[0] and BOARD_COLUMNS.index(pawn[0]["pawn_col"])+1 == BOARD_COLUMNS.index(move_to[1]):
-                        fake_cell_index: tuple[int, str] = (move_to[0]-1, BOARD_COLUMNS[BOARD_COLUMNS.index(move_to[1])+1])
-                    else:
-                        fake_cell_index: tuple[int, str] = (move_to[0]-1, BOARD_COLUMNS[BOARD_COLUMNS.index(move_to[1])-1])
-                else:
-                    if pawn[0]["pawn_row"]+1 == move_to[0] and BOARD_COLUMNS.index(pawn[0]["pawn_col"])+1 == BOARD_COLUMNS.index(move_to[1]):
-                        fake_cell_index: tuple[int, str] = (move_to[0]+1, BOARD_COLUMNS[BOARD_COLUMNS.index(move_to[1])+1])
-                    else:
-                        fake_cell_index: tuple[int, str] = (move_to[0]+1, BOARD_COLUMNS[BOARD_COLUMNS.index(move_to[1])-1])
-                
-                # Check the cells that are reachable by the fake pawn
-                reachable_cells_by_fake_pawn: list[tuple[dict, int]] = self.is_reachable(fake_pawn, board)
-                get_informations_about_the_potential_cell: tuple[dict, int] = board.get_cell(board.board, fake_cell_index)
-                
-                if get_informations_about_the_potential_cell in reachable_cells_by_fake_pawn and get_informations_about_the_potential_cell[0]["cell_is_empty"] == True:
-                    
-                    # Update informations about the actual cell
-                    informations_about_the_actual_cell[0]["cell_is_empty"] = True
-                    informations_about_the_actual_cell[0]["cell_owner"] = 0
-                    
-                    # Update the pawn informations (position and gui)
-                    pawn[0]["pawn_row"] = fake_cell_index[0]
-                    pawn[0]["pawn_col"] = fake_cell_index[1]
-                    pawn[0]["pawn_pos"] = [pawn[0]["pawn_row"], pawn[0]["pawn_col"]]
-                    pawn[0]["pawn_gui"].x = get_informations_about_the_potential_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
-                    pawn[0]["pawn_gui"].y = get_informations_about_the_potential_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
-                    
-                    # Pawn becomes a king
-                    if self.player_id == 1 and move_to[0] == 0:
-                        pawn[0]["pawn_type"] = "King"
-                    elif self.player_id == 2 and move_to[0] == BOARD_SIZE-1:
-                        pawn[0]["pawn_type"] = "King"
-                    
-                    # Update informations about the dead pawn
-                    self.take_pawn(ennemy_pawns, list(move_to))
-                    
-                    # Update informations about the destination cell
-                    informations_about_the_destination_cell[0]["cell_is_empty"] = True
-                    informations_about_the_destination_cell[0]["cell_owner"] = 0
-                    
-                    # Update informations about the destination cell the real this time
-                    get_informations_about_the_potential_cell[0]["cell_is_empty"] = False
-                    get_informations_about_the_potential_cell[0]["cell_owner"] = pawn[0]["pawn_owner"]
-                    
-                    return True
-                else:
-                    print(False)
-                
             else:
-                return False
-        else:
-            return False
+                for cell in reachable_cells_by_pawn[move_to]:
+                    if not cell[0]["cell_is_empty"]:
+                        current_cell[0]["cell_owner"] = 0
+                        current_cell[0]["cell_is_empty"] = True
+                        
+                        cell[0]["cell_owner"] = 0
+                        cell[0]["cell_is_empty"] = True
+                        self.take_pawn(ennemy_pawns, list(cell[0]["cell_index"]))
+                
+                destination_cell[0]["cell_owner"] = self.player_id
+                destination_cell[0]["cell_is_empty"] = False
+                
+                pawn[0]["pawn_row"], pawn[0]["pawn_col"] = move_to[0], move_to[1]
+                pawn[0]["pawn_pos"] = list(move_to)
+                pawn[0]["pawn_gui"].x = destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
+                pawn[0]["pawn_gui"].y = destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
+                
+                if self.player_id == 1 and pawn[0]["pawn_row"] == 0:
+                    pawn[0]["pawn_type"] = "King"
+                elif self.player_id == 2 and pawn[0]["pawn_row"] == BOARD_SIZE-1:
+                    pawn[0]["pawn_type"] = "King"
 
     def take_pawn(self, pawns: list[dict], pawn_pos: list[int, str]):
         pawn_to_take: tuple[dict, int] = self.get_pawn(pawns, pawn_pos)
