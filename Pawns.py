@@ -193,11 +193,8 @@ class Pawns:
                 else:
                     moves[(row, BOARD_COLUMNS[left])] = last
                 
-                if step == -1:
-                    row_range = -1
-                else:
-                    row_range = BOARD_SIZE
-                moves.update(self._traverse_left_king(row+step, row_range, step, board, left-1, skipped=last+skipped))
+                moves.update(self._traverse_left_king(row+step, stop, step, board, left-1, skipped=last+skipped))
+                break
             elif current_cell[0]["cell_owner"] == self.player_id:
                 break
             else:
@@ -226,11 +223,7 @@ class Pawns:
                 else:
                     moves[(row, BOARD_COLUMNS[right])] = last
                 
-                if step == -1:
-                    row_range = -1
-                else:
-                    row_range = BOARD_SIZE
-                moves.update(self._traverse_right_king(row+step, row_range, step, board, right+1, skipped=last+skipped))
+                moves.update(self._traverse_right_king(row+step, stop, step, board, right+1, skipped=last+skipped))
                 break
             elif current_cell[0]["cell_owner"] == self.player_id:
                 break
