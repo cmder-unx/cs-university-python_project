@@ -24,15 +24,20 @@ class Game:
         self.player1: Pawns = Pawns(1, self.board.board) # Initialize pawns for player 1
         self.player2: Pawns = Pawns(2, self.board.board) # Initialize pawns for player 2
         
-        self.player1.get_pawn(self.player1.player_pawns, [6, "D"])[0]["pawn_type"] = "King"
-        self.player2.move_pawn(self.player2.get_pawn(self.player2.player_pawns, [3, "G"]), (4, "F"), self.player2.get_valid_moves(self.player2.get_pawn(self.player2.player_pawns, [3, "G"]), self.board), self.player1.player_pawns, self.board)
-        self.player2.move_pawn(self.player2.get_pawn(self.player2.player_pawns, [4, "F"]), (5, "E"), self.player2.get_valid_moves(self.player2.get_pawn(self.player2.player_pawns, [4, "F"]), self.board), self.player1.player_pawns, self.board)
+        #self.player1.get_pawn(self.player1.player_pawns, [6, "D"])[0]["pawn_type"] = "King"
+        #self.player2.move_pawn(self.player2.get_pawn(self.player2.player_pawns, [3, "G"]), (4, "F"), self.player2.get_valid_moves(self.player2.get_pawn(self.player2.player_pawns, [3, "G"]), self.board), self.player1.player_pawns, self.board)
         
-        self.player2.take_pawn(self.player2.player_pawns, [0, "J"])
-        self.board.get_cell(self.board.board, (0, "J"))[0]["cell_owner"] = 0
-        self.board.get_cell(self.board.board, (0, "J"))[0]["cell_is_empty"] = True
+        #self.player2.take_pawn(self.player2.player_pawns, [0, "J"])
+        #self.board.get_cell(self.board.board, (0, "J"))[0]["cell_owner"] = 0
+        #self.board.get_cell(self.board.board, (0, "J"))[0]["cell_is_empty"] = True
         
-        self.player2.move_pawn(self.player2.get_pawn(self.player2.player_pawns, [2, "H"]), (3, "G"), self.player2.get_valid_moves(self.player2.get_pawn(self.player2.player_pawns, [2, "H"]), self.board), self.player1.player_pawns, self.board)
+        #self.player2.take_pawn(self.player2.player_pawns, [2, "H"])
+        #self.board.get_cell(self.board.board, (2, "H"))[0]["cell_owner"] = 0
+        #self.board.get_cell(self.board.board, (2, "H"))[0]["cell_is_empty"] = True
+        
+        #self.player2.take_pawn(self.player2.player_pawns, [1, "I"])
+        #self.board.get_cell(self.board.board, (1, "I"))[0]["cell_owner"] = 0
+        #self.board.get_cell(self.board.board, (1, "I"))[0]["cell_is_empty"] = True
         
         self.player_current_id: int = self.client.receive()
         print(self.player_current_id)

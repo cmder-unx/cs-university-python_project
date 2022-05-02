@@ -179,7 +179,7 @@ class Pawns:
         last = []
         
         for row in range(start, stop, step):
-            if row < 0 or row >= BOARD_SIZE and left < 0:
+            if row < 0 or row >= BOARD_SIZE or left < 0:
                 break
             
             current_cell = board.get_cell(board.board, (row, BOARD_COLUMNS[left]))
@@ -188,9 +188,7 @@ class Pawns:
                 if current_cell[0]["cell_is_empty"] == False and next_cell[0]["cell_is_empty"] == False:
                     break
             if current_cell[0]["cell_is_empty"] == True:
-                if skipped and not last:
-                    break
-                elif skipped:
+                if skipped:
                     moves[(row, BOARD_COLUMNS[left])] = last + skipped
                 else:
                     moves[(row, BOARD_COLUMNS[left])] = last
@@ -214,7 +212,7 @@ class Pawns:
         last = []
         
         for row in range(start, stop, step):
-            if row < 0 or row >= BOARD_SIZE and right >= len(BOARD_COLUMNS):
+            if row < 0 or row >= BOARD_SIZE or right >= len(BOARD_COLUMNS):
                 break
             
             current_cell = board.get_cell(board.board, (row, BOARD_COLUMNS[right]))
@@ -223,9 +221,7 @@ class Pawns:
                 if current_cell[0]["cell_is_empty"] == False and next_cell[0]["cell_is_empty"] == False:
                     break
             if current_cell[0]["cell_is_empty"] == True:
-                if skipped and not last:
-                    break
-                elif skipped:
+                if skipped:
                     moves[(row, BOARD_COLUMNS[right])] = last + skipped
                 else:
                     moves[(row, BOARD_COLUMNS[right])] = last
