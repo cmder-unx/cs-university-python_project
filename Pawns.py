@@ -125,9 +125,9 @@ class Pawns:
                 
                 if last:
                     if step == -1:
-                        row_range = max(row-3, 0)
+                        row_range = max(row-3, -1)
                     else:
-                        row_range = min(row+3, BOARD_SIZE-1)
+                        row_range = min(row+3, BOARD_SIZE)
                     moves.update(self._traverse_left(row+step, row_range, step, board, left-1, skipped=last))
                     moves.update(self._traverse_right(row+step, row_range, step, board, left+1, skipped=last))
                 break
@@ -159,9 +159,9 @@ class Pawns:
                 
                 if last:
                     if step == -1:
-                        row_range = max(row-3, 0)
+                        row_range = max(row-3, -1)
                     else:
-                        row_range = min(row+3, BOARD_SIZE-1)
+                        row_range = min(row+3, BOARD_SIZE)
                     moves.update(self._traverse_left(row+step, row_range, step, board, right-1, skipped=last))
                     moves.update(self._traverse_right(row+step, row_range, step, board, right+1, skipped=last))
                 break

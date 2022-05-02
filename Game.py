@@ -77,7 +77,7 @@ class Game:
         receive_data_netw.start()
         game_running = True
         while game_running:
-            
+            pygame.display.set_caption(f"{GAME_NAME} - Player {self.player_current_id} - Turn {self.turn}") # Set the window title
             mouse_position: tuple[int, int] = pygame.mouse.get_pos() # Get the current mouse position in a tuple (x, y)
             for event in pygame.event.get():
                 """
