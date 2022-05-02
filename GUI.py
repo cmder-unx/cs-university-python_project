@@ -1,4 +1,5 @@
 from constants import *
+import sys
 
 class GUI:
     
@@ -67,3 +68,9 @@ class GUI:
                 reachable_cell_gui_indicator_position: tuple[int, int] = (board.get_cell(board.board, (row, col))[0]["cell_gui"].x+GUI_CELL_SIZE//2, board.get_cell(board.board, (row, col))[0]["cell_gui"].y+GUI_CELL_SIZE//2)
                 reachable_cell_gui_indicator_size: int = 10
                 pygame.draw.circle(screen, reachable_cell_gui_indicator_color, reachable_cell_gui_indicator_position, reachable_cell_gui_indicator_size)
+    
+    def event_gui_close_game(self, event: pygame.event) -> None:
+        if event.type == pygame.QUIT:
+            self.receive_data = False
+            pygame.quit()
+            sys.exit()

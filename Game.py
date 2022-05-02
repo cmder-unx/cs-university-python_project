@@ -25,6 +25,14 @@ class Game:
         self.player2: Pawns = Pawns(2, self.board.board) # Initialize pawns for player 2
         
         self.player1.get_pawn(self.player1.player_pawns, [6, "D"])[0]["pawn_type"] = "King"
+        self.player2.move_pawn(self.player2.get_pawn(self.player2.player_pawns, [3, "G"]), (4, "F"), self.player2.get_valid_moves(self.player2.get_pawn(self.player2.player_pawns, [3, "G"]), self.board), self.player1.player_pawns, self.board)
+        self.player2.move_pawn(self.player2.get_pawn(self.player2.player_pawns, [4, "F"]), (5, "E"), self.player2.get_valid_moves(self.player2.get_pawn(self.player2.player_pawns, [4, "F"]), self.board), self.player1.player_pawns, self.board)
+        
+        self.player2.take_pawn(self.player2.player_pawns, [0, "J"])
+        self.board.get_cell(self.board.board, (0, "J"))[0]["cell_owner"] = 0
+        self.board.get_cell(self.board.board, (0, "J"))[0]["cell_is_empty"] = True
+        
+        self.player2.move_pawn(self.player2.get_pawn(self.player2.player_pawns, [2, "H"]), (3, "G"), self.player2.get_valid_moves(self.player2.get_pawn(self.player2.player_pawns, [2, "H"]), self.board), self.player1.player_pawns, self.board)
         
         self.player_current_id: int = self.client.receive()
         print(self.player_current_id)
@@ -91,10 +99,10 @@ class Game:
                                         # that we initialized before to None
                                         if self.player_current_id == 0:
                                             self.reachable_cells_by_pawn: dict = self.player1.get_valid_moves(self.selected_pawn, self.board)
-                                            print(self.reachable_cells_by_pawn)
+                                            #print("\n", self.reachable_cells_by_pawn[(2, "H")], "\n", self.reachable_cells_by_pawn[(0, "J")], "\n")
                                         else:
                                             self.reachable_cells_by_pawn: dict = self.player2.get_valid_moves(self.selected_pawn, self.board)
-                                            print(self.reachable_cells_by_pawn)
+                                            #print("\n", self.reachable_cells_by_pawn,"\n")
                                 else:
                                     self.reachable_cells_by_pawn = None # If the pawn doesn't exist, the reachable cells will be reset
                             elif cell["cell_gui"].collidepoint(mouse_position) and cell["cell_owner"] != self.player_current_id+1:
@@ -113,10 +121,7 @@ class Game:
                 -----------------------------------END TEST-------------------------------------
                 ################################################################################
                 """
-                if event.type == pygame.QUIT:
-                    self.receive_data = False
-                    pygame.quit()
-                    sys.exit()
+                self.GUI.event_gui_close_game(event)
             
             self.GUI.draw_gui_board(WINDOW, self.board.board) # Draw the board
             self.GUI.draw_gui_pawns(WINDOW, self.player1.player_pawns) # Draw the pawns of player 1

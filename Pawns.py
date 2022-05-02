@@ -179,31 +179,27 @@ class Pawns:
         last = []
         
         for row in range(start, stop, step):
-            if left < 0:
+            if row < 0 or row >= BOARD_SIZE and left < 0:
                 break
             
             current_cell = board.get_cell(board.board, (row, BOARD_COLUMNS[left]))
-            previous_cell = board.get_cell(board.board, (row+step, BOARD_COLUMNS[left-1]))
-            print("\n",current_cell,"\n")
-            if current_cell[0]["cell_is_empty"] == False and previous_cell[0]["cell_is_empty"] == False:
-                break
-            elif current_cell[0]["cell_is_empty"] == True:
+            if row+step > -1 and row+step < BOARD_SIZE and left-1 > -1:
+                next_cell = board.get_cell(board.board, (row+step, BOARD_COLUMNS[left-1]))
+                if current_cell[0]["cell_is_empty"] == False and next_cell[0]["cell_is_empty"] == False:
+                    break
+            if current_cell[0]["cell_is_empty"] == True:
                 if skipped and not last:
-                    #print(1)
                     break
                 elif skipped:
-                    #print("\n3 - LAST : ", last, " SKIPPED : ", skipped,"\n")
                     moves[(row, BOARD_COLUMNS[left])] = last + skipped
                 else:
-                    #print("\n3 - LAST : ", last,"\n")
                     moves[(row, BOARD_COLUMNS[left])] = last
                 
                 if step == -1:
                     row_range = -1
                 else:
                     row_range = BOARD_SIZE
-                moves.update(self._traverse_left_king(row+step, row_range, step, board, left-1, skipped=last))
-                break
+                moves.update(self._traverse_left_king(row+step, row_range, step, board, left-1, skipped=last+skipped))
             elif current_cell[0]["cell_owner"] == self.player_id:
                 break
             else:
@@ -218,29 +214,27 @@ class Pawns:
         last = []
         
         for row in range(start, stop, step):
-            if right >= len(BOARD_COLUMNS):
+            if row < 0 or row >= BOARD_SIZE and right >= len(BOARD_COLUMNS):
                 break
             
             current_cell = board.get_cell(board.board, (row, BOARD_COLUMNS[right]))
-            next_cell = board.get_cell(board.board, (row+step, BOARD_COLUMNS[right+1]))
-            if current_cell[0]["cell_is_empty"] == False and next_cell[0]["cell_is_empty"] == False:
-                break
-            elif current_cell[0]["cell_is_empty"] == True:
+            if row+step > -1 and row+step < BOARD_SIZE and right+1 < len(BOARD_COLUMNS):
+                next_cell = board.get_cell(board.board, (row+step, BOARD_COLUMNS[right+1]))
+                if current_cell[0]["cell_is_empty"] == False and next_cell[0]["cell_is_empty"] == False:
+                    break
+            if current_cell[0]["cell_is_empty"] == True:
                 if skipped and not last:
-                    #print(1)
                     break
                 elif skipped:
-                    #print("\n3 - LAST : ", last, " SKIPPED : ", skipped,"\n")
                     moves[(row, BOARD_COLUMNS[right])] = last + skipped
                 else:
-                    #print("\n3 - LAST : ", last,"\n")
                     moves[(row, BOARD_COLUMNS[right])] = last
                 
                 if step == -1:
                     row_range = -1
                 else:
                     row_range = BOARD_SIZE
-                moves.update(self._traverse_right_king(row+step, row_range, step, board, right+1, skipped=last))
+                moves.update(self._traverse_right_king(row+step, row_range, step, board, right+1, skipped=last+skipped))
                 break
             elif current_cell[0]["cell_owner"] == self.player_id:
                 break
