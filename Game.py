@@ -26,48 +26,6 @@ class Game:
         
         self.player1.get_pawn(self.player1.player_pawns, [6, "D"])[0]["pawn_type"] = "King"
         
-        """ self.player1.player_pawns = [{'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 7, 'pawn_col': 'A', 'pawn_pos': [7, 'A'], 'pawn_gui': pygame.Rect(25, 375, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 9, 'pawn_col': 'A', 'pawn_pos': [9, 'A'], 'pawn_gui': pygame.Rect(25, 475, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 6, 'pawn_col': 'B', 'pawn_pos': [6, 'B'], 'pawn_gui': pygame.Rect(75, 325, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 8, 'pawn_col': 'B', 'pawn_pos': [8, 'B'], 'pawn_gui': pygame.Rect(75, 425, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 7, 'pawn_col': 'C', 'pawn_pos': [7, 'C'], 'pawn_gui': pygame.Rect(125, 375, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 9, 'pawn_col': 'C', 'pawn_pos': [9, 'C'], 'pawn_gui': pygame.Rect(125, 475, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 5, 'pawn_col': 'E', 'pawn_pos': [5, 'E'], 'pawn_gui': pygame.Rect(225, 275, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 8, 'pawn_col': 'D', 'pawn_pos': [8, 'D'], 'pawn_gui': pygame.Rect(175, 425, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 3, 'pawn_col': 'E', 'pawn_pos': [3, 'E'], 'pawn_gui': pygame.Rect(225, 175, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 9, 'pawn_col': 'E', 'pawn_pos': [9, 'E'], 'pawn_gui': pygame.Rect(225, 475, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'dead', 'pawn_owner': 1, 'pawn_row': None, 'pawn_col': None, 'pawn_pos': None, 'pawn_gui': None}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 6, 'pawn_col': 'D', 'pawn_pos': [6, 'D'], 'pawn_gui': pygame.Rect(175, 325, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'dead', 'pawn_owner': 1, 'pawn_row': None, 'pawn_col': None, 'pawn_pos': None, 'pawn_gui': None}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 6, 'pawn_col': 'F', 'pawn_pos': [6, 'F'], 'pawn_gui': pygame.Rect(275, 325, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 6, 'pawn_col': 'H', 'pawn_pos': [6, 'H'], 'pawn_gui': pygame.Rect(375, 325, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 8, 'pawn_col': 'H', 'pawn_pos': [8, 'H'], 'pawn_gui': pygame.Rect(375, 425, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 7, 'pawn_col': 'I', 'pawn_pos': [7, 'I'], 'pawn_gui': pygame.Rect(425, 375, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 9, 'pawn_col': 'I', 'pawn_pos': [9, 'I'], 'pawn_gui': pygame.Rect(425, 475, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 6, 'pawn_col': 'J', 'pawn_pos': [6, 'J'], 'pawn_gui': pygame.Rect(475, 325, 25, 25)}, 
-                                     {'pawn_type': 'Pawn', 'pawn_color': 'W', 'pawn_status': 'alive', 'pawn_owner': 1, 'pawn_row': 8, 'pawn_col': 'J', 'pawn_pos': [8, 'J'], 'pawn_gui': pygame.Rect(475, 425, 25, 25)}]
-        
-        self.player2.player_pawns = [{'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 1, 'pawn_col': 'A', 'pawn_pos': [1, 'A'], 'pawn_gui': pygame.Rect(25, 75, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 3, 'pawn_col': 'A', 'pawn_pos': [3, 'A'], 'pawn_gui': pygame.Rect(25, 175, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 0, 'pawn_col': 'B', 'pawn_pos': [0, 'B'], 'pawn_gui': pygame.Rect(75, 25, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 2, 'pawn_col': 'B', 'pawn_pos': [2, 'B'], 'pawn_gui': pygame.Rect(75, 125, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 1, 'pawn_col': 'C', 'pawn_pos': [1, 'C'], 'pawn_gui': pygame.Rect(125, 75, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 3, 'pawn_col': 'C', 'pawn_pos': [3, 'C'], 'pawn_gui': pygame.Rect(125, 175, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 0, 'pawn_col': 'D', 'pawn_pos': [0, 'D'], 'pawn_gui': pygame.Rect(175, 25, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 2, 'pawn_col': 'D', 'pawn_pos': [2, 'D'], 'pawn_gui': pygame.Rect(175, 125, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 1, 'pawn_col': 'E', 'pawn_pos': [1, 'E'], 'pawn_gui': pygame.Rect(225, 75, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'dead', 'pawn_owner': 2, 'pawn_row': None, 'pawn_col': None, 'pawn_pos': None, 'pawn_gui': None}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 0, 'pawn_col': 'F', 'pawn_pos': [0, 'F'], 'pawn_gui': pygame.Rect(275, 25, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 3, 'pawn_col': 'G', 'pawn_pos': [3, 'G'], 'pawn_gui': pygame.Rect(325, 175, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 1, 'pawn_col': 'G', 'pawn_pos': [1, 'G'], 'pawn_gui': pygame.Rect(325, 75, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'dead', 'pawn_owner': 2, 'pawn_row': None, 'pawn_col': None, 'pawn_pos': None, 'pawn_gui': None}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 0, 'pawn_col': 'H', 'pawn_pos': [0, 'H'], 'pawn_gui': pygame.Rect(375, 25, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'King', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 9, 'pawn_col': 'G', 'pawn_pos': [9, 'G'], 'pawn_gui': pygame.Rect(325, 475, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 1, 'pawn_col': 'I', 'pawn_pos': [1, 'I'], 'pawn_gui': pygame.Rect(425, 75, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'dead', 'pawn_owner': 2, 'pawn_row': None, 'pawn_col': None, 'pawn_pos': None, 'pawn_gui': None}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 0, 'pawn_col': 'J', 'pawn_pos': [0, 'J'], 'pawn_gui': pygame.Rect(475, 25, 25, 25)}, 
-                                     {'pawn_color': 'B', 'pawn_type': 'Pawn', 'pawn_status': 'alive', 'pawn_owner': 2, 'pawn_row': 2, 'pawn_col': 'J', 'pawn_pos': [2, 'J'], 'pawn_gui': pygame.Rect(475, 125, 25, 25)}] """
-        
         self.player_current_id: int = self.client.receive()
         print(self.player_current_id)
         
@@ -150,8 +108,6 @@ class Game:
                                     self.turn+=1
                                     data_to_send: tuple = (self.turn, self.player1.player_pawns, self.player2.player_pawns, self.board.board)
                                     self.client.send(data_to_send)
-                                    print("\n\nPLAYER 1: ", self.player1.player_pawns)
-                                    print("PLAYER 2: ", self.player2.player_pawns,"\n\n")
                                     trame+=1
                 """
                 -----------------------------------END TEST-------------------------------------
