@@ -156,10 +156,10 @@ class Game:
                 game_running = False
         
         if self.number_of_players_currently_connected == 1:
-            self.GUI.gui_player_has_left(self.game_pid)
+            self.GUI.gui_player_has_left_screen(self.game_pid)
         elif self.winner_id is not None:
             if self.winner_id != self.player_current_id:
-                self.GUI.gui_winner(f"Player {self.winner_id+1}", self.game_pid)
+                self.GUI.gui_winner_screen(f"Player {self.winner_id+1}", self.game_pid)
             else:
-                self.GUI.gui_winner(f"You", self.game_pid)
+                self.GUI.gui_winner_screen(f"You", self.game_pid)
         

@@ -146,7 +146,7 @@ class GUI:
         window.fill(color)
         print(clock.get_fps()) if show_fps else None
     
-    def gui_start_menu(self) -> str:
+    def gui_start_menu_screen(self) -> str:
         titre = "Jeu de Dames !"
         ordre = "Entre ton adresse réseau local pour jouer avec un ami (si tu en as)"
         join_button_text = "Rejoindre"
@@ -179,7 +179,7 @@ class GUI:
             CLOCK.tick(FPS)
             self.window_update(WINDOW, BLACK, CLOCK, False)
     
-    def gui_player_has_left(self, game_pid: int) -> None:
+    def gui_player_has_left_screen(self, game_pid: int) -> None:
         while True:
             for event in pygame.event.get():
                 self.event_gui_close_game(event, game_pid)
@@ -189,7 +189,7 @@ class GUI:
             CLOCK.tick(FPS)
             self.window_update(WINDOW, BLACK, CLOCK, False)
     
-    def gui_winner(self, winner: str, game_pid: int) -> None:
+    def gui_winner_screen(self, winner: str, game_pid: int) -> None:
         while True:
             for event in pygame.event.get():
                 self.event_gui_close_game(event, game_pid)
@@ -198,3 +198,4 @@ class GUI:
             
             CLOCK.tick(FPS)
             self.window_update(WINDOW, BLACK, CLOCK, False)
+    
