@@ -120,10 +120,10 @@ class Game:
                                         # that we initialized before to None
                                         if self.player_current_id == 0:
                                             self.reachable_cells_by_pawn: dict = self.player1.get_valid_moves(self.selected_pawn, self.board)
-                                            #print("\n", self.reachable_cells_by_pawn[(2, "H")], "\n", self.reachable_cells_by_pawn[(0, "J")], "\n")
+                                            print("\n", self.reachable_cells_by_pawn, "\n")
                                         else:
                                             self.reachable_cells_by_pawn: dict = self.player2.get_valid_moves(self.selected_pawn, self.board)
-                                            #print("\n", self.reachable_cells_by_pawn,"\n")
+                                            print("\n", self.reachable_cells_by_pawn,"\n")
                                 else:
                                     self.reachable_cells_by_pawn = None # If the pawn doesn't exist, the reachable cells will be reset
                             elif cell["cell_gui"].collidepoint(mouse_position) and cell["cell_owner"] != self.player_current_id+1:

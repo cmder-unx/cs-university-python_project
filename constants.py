@@ -5,10 +5,8 @@ THIS FILE CONTAINS ALL THE CONSTANTS USED IN THE GAME
 """
 
 # DEFINE CONSTANTS
-BOARD_SIZE: int = 10
+BOARD_SIZE: int = 8
 BOARD_COLUMNS: tuple[str] = tuple(string.ascii_uppercase[:BOARD_SIZE])
-PAWN_MAX_RANGE: int = 1
-KING_MAX_RANGE: int = 9
 CELL_COLOR_1: str = "W"
 CELL_COLOR_2: str = "B"
 

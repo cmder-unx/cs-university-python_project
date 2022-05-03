@@ -15,11 +15,11 @@ class Pawns:
         # pawn_status: the status of the pawn (alive or dead), pawn_owner: the owner of the pawn (1 or 2),
         # pawn_row: the row of the pawn, pawn_col: the column of the pawn, pawn_pos: the position of the pawn (row, col),
         # pawn_gui: the gui of the pawn
-        self.player_pawns: list[dict] = self.create_player_pawns() 
+        self.player_pawns: list[dict] = self.create_player_pawns(3) 
         
         GUI().gui_pawns(self.player_pawns, self.board) # Create the gui for the pawns (GUI = Graphical User Interface)
     
-    def create_player_pawns(self) -> list[dict]:
+    def create_player_pawns(self, layer: int) -> list[dict]:
         """_summary_: this function will create the pawns for the player as a list of dictionnaries
 
         Returns:
@@ -28,7 +28,7 @@ class Pawns:
         player_pawns: list[dict] = [] # will contain each dict that represents a pawn
         for cell in self.board:
             pawn_informations: dict = {} # will contain the informations about the pawn
-            if self.player_id == 1 and cell["cell_row"] > 5 and cell["cell_color"] == "B":
+            if self.player_id == 1 and cell["cell_row"] > BOARD_SIZE-(layer+1) and cell["cell_color"] == "B":
                 #Create pawn with its data and add it to pawn_informations
                 pawn_informations["pawn_type"] = "Pawn"
                 pawn_informations["pawn_color"] = "W"
@@ -43,7 +43,7 @@ class Pawns:
                 #Update the cell data
                 cell["cell_is_empty"] = False
                 cell["cell_owner"] = self.player_id
-            elif self.player_id == 2 and cell["cell_row"] < 4 and cell["cell_color"] == "B":
+            elif self.player_id == 2 and cell["cell_row"] < layer and cell["cell_color"] == "B":
                 #Create pawn with its data and add it to pawn_informations
                 pawn_informations["pawn_color"] = "B"
                 pawn_informations["pawn_type"] = "Pawn"
@@ -90,19 +90,29 @@ class Pawns:
         right: int = BOARD_COLUMNS.index(pawn[0]["pawn_col"]) + 1
         row: int = pawn[0]["pawn_row"]
         
-        if pawn[0]["pawn_owner"] == 1 and pawn[0]["pawn_type"] == "Pawn":
+        if pawn[0]["pawn_owner"] == 1 or pawn[0]["pawn_type"] == "King":
             moves.update(self._traverse_left(row-1, max(row-3, -1), -1, board, left, skipped=[]))
             moves.update(self._traverse_right(row-1, max(row-3, -1), -1, board, right, skipped=[]))
         
-        if pawn[0]["pawn_owner"] == 2 and pawn[0]["pawn_type"] == "Pawn":
+        if pawn[0]["pawn_owner"] == 2 or pawn[0]["pawn_type"] == "King":
             moves.update(self._traverse_left(row+1, min(row+3, BOARD_SIZE), 1, board, left, skipped=[]))
             moves.update(self._traverse_right(row+1, min(row+3, BOARD_SIZE), 1, board, right, skipped=[]))
         
-        if pawn[0]["pawn_type"] == "King":
+        """ if pawn[0]["pawn_type"] == "King":
             moves.update(self._traverse_left_king(row-1, -1, -1, board, left, skipped=[]))
             moves.update(self._traverse_right_king(row-1, -1, -1, board, right, skipped=[]))
             moves.update(self._traverse_left_king(row+1, BOARD_SIZE, 1, board, left, skipped=[]))
-            moves.update(self._traverse_right_king(row+1, BOARD_SIZE, 1, board, right, skipped=[]))
+            moves.update(self._traverse_right_king(row+1, BOARD_SIZE, 1, board, right, skipped=[])) """
+        
+        tmp_len: int = 0
+        best_move_key: tuple[int, str] = None
+        for move in moves:
+            if len(moves[move]) > tmp_len:
+                tmp_len = len(moves[move])
+                best_move_key = move
+        
+        if best_move_key:
+            moves = {best_move_key: moves[best_move_key]}
         
         return moves
     
@@ -289,6 +299,9 @@ class Pawns:
         else:
             print(False)
     
+    def selectable_pawns(self):
+        pass
+
 
 
 if __name__ == "__main__":

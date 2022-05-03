@@ -39,10 +39,10 @@ class Server:
                     print("DISCONNECTED")
                     break
                 else:
-                    print(f"Received : {data} from : {client_socket}")
+                    print(f"Received data from : {client_socket}")
                     for client in self.clients_list:
                         client[1].sendall(reply)
-                        print(f"Sending : {reply} to : {client[1]}")
+                        print(f"Sending to : {client[1]}")
             except:
                 self.clients_list.remove(self.clients_list[self.clients_list.index((client_id, client_socket, addr))])
                 
