@@ -184,7 +184,7 @@ class GUI:
             for event in pygame.event.get():
                 self.event_gui_close_game(event, game_pid)
             
-            self.gui_label(WINDOW, "A PLAYER HAS LEFT", (WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2-125), None, 45, BLUE)
+            self.gui_label(WINDOW, "A PLAYER HAS LEFT", (WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2), None, 45, WHITE)
             
             CLOCK.tick(FPS)
             self.window_update(WINDOW, BLACK, CLOCK, False)
@@ -194,7 +194,7 @@ class GUI:
             for event in pygame.event.get():
                 self.event_gui_close_game(event, game_pid)
             
-            self.gui_label(WINDOW, winner+" WON", (WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2-125), None, 45, BLUE)
+            self.gui_label(WINDOW, winner+" WON", (WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2), None, 45, WHITE)
             
             CLOCK.tick(FPS)
             self.window_update(WINDOW, BLACK, CLOCK, False)

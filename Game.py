@@ -66,7 +66,7 @@ class Game:
                 self.GUI.event_gui_close_game(event, self.game_pid)
             
             label: str = "Waiting for player 2 to connect"
-            self.GUI.gui_label(WINDOW, label, (WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2-125), None, 45, WHITE)
+            self.GUI.gui_label(WINDOW, label, (WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2), None, 35, WHITE)
             
             if self.number_of_players_currently_connected == 2:
                 break
