@@ -110,6 +110,8 @@ class Pawns:
             if len(moves[move]) > tmp_len:
                 tmp_len = len(moves[move])
                 best_move_key = move
+            elif tmp_len > 0 and len(moves[move]) == tmp_len:
+                best_move_key = None
         
         if best_move_key:
             moves = {best_move_key: moves[best_move_key]}
