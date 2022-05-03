@@ -23,9 +23,12 @@ class Server:
         connected = True
         client_id: int = len(self.clients_list)
         self.clients_list.append((client_id, client_socket, addr))
-        client_socket.sendall(pickle.dumps(client_id))
+        client_socket.sendall(pickle.dumps((client_id, len(self.clients_list))))
         print(f"{ addr } CONNECTED")
         print(f"Number of clients connected : { len(self.clients_list) }")
+        for client in self.clients_list:
+            if client[0] != client_id:
+                client[1].sendall(pickle.dumps(len(self.clients_list)))
         while connected:
             try:
                 data = pickle.loads(client_socket.recv(self.HEADER))
@@ -47,6 +50,8 @@ class Server:
                 print("LOST CONNECTION")
                 print("ERROR WHILE TRY TO MANAGED THE CLIENT")
                 print(f"Number of clients connected : { len(self.clients_list) }")
+                for client in self.clients_list:
+                    client[1].sendall(pickle.dumps({"number_of_players_currently_connected" : len(self.clients_list)}))
                 break
         client_socket.close()
     
