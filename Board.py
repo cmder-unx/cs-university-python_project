@@ -5,15 +5,10 @@ from typing import *
 class Board:
     
     def __init__(self, size: int, columns: list[str]) -> None:
-        self.size: int = size # size of the board, number of rows and columns
-        self.columns: list[str] = columns # list of the columns names, check constants.py for more info BOARD_COLUMNS
-        
-        # Create the board. The board is represented by a list of the cells, 
-        # each cell is a dict with the following keys: 
-        # cell_row, cell_col, cell_index, cell_color, cell_is_empty, cell_owner, cell_gui
+        self.size: int = size
+        self.columns: list[str] = columns
         self.board: list[dict] = self.create_board()
-        
-        GUI().gui_board(self.board) # Create the gui board (GUI = Graphical User Interface)
+        GUI().gui_board(self.board)
     
     def __repr__(self) -> str:
         """_summary_ : this function will return a string containing the representation of the board in its raw form
@@ -53,10 +48,10 @@ class Board:
         Returns:
             list[dict]: the board as a list of dicts, each dict represent a cell
         """
-        board: list = [] # will contain each dict that represent a cell of the board
+        board: list = []
         for column in self.columns:
             for row in range(self.size):
-                cell: dict = {} # will contain the informations about the cell
+                cell: dict = {}
                 cell["cell_row"] = row
                 cell["cell_col"] = column
                 cell["cell_index"] = (row, column)
@@ -67,7 +62,7 @@ class Board:
                 cell["cell_is_empty"] = True
                 cell["cell_owner"] = 0
                 cell["cell_gui"] = None
-                board.append(cell) # add the cell to the board
+                board.append(cell)
         return board
     
     def get_cell(self, board: list[dict], cell_index: tuple[int, str]) -> tuple[dict, int]:

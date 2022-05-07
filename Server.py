@@ -71,4 +71,5 @@ class Server:
         while running:
             self.server_manage()
 
-Server(6000).start()
+if __name__ == "__main__":
+    Server(6000).start()

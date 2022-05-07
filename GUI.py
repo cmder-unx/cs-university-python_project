@@ -150,14 +150,13 @@ class GUI:
         titre = "Jeu de Dames !"
         ordre = "Entre ton adresse réseau local pour jouer avec un ami (si tu en as)"
         join_button_text = "Rejoindre"
-        user_text: str = "" #Ce qui sera saisi par l'utilisateur
+        user_text: str = ""
         while True:
             mouse_position: tuple[int, int] = pygame.mouse.get_pos()
             
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_BACKSPACE:
-                        #Pour pouvoir utiliser la touche Effacer
                         user_text=user_text[:-1]
                     elif event.key == pygame.K_RETURN:
                         if len(user_text) > 0:
