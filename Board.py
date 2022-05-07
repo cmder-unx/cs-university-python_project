@@ -15,7 +15,7 @@ class Board:
         self.size: int = size
         self.columns: list[str] = columns
         self.board: list[dict] = self.create_board()
-        GUI().gui_board(self.board)
+        GUI().gui_board(self.board) # Attribue à chaque cellule sa représentation graphique avec pygame
     
     def __repr__(self) -> str:
         """_summary_ : Représentation de la board sous sa forme brute de liste de dictionnaire.

@@ -16,7 +16,7 @@ class Pawns:
         self.player_id: int = player_id
         self.board: list[dict] = board
         self.player_pawns: list[dict] = self.create_player_pawns(3) 
-        GUI().gui_pawns(self.player_pawns, self.board)
+        GUI().gui_pawns(self.player_pawns, self.board) # Attribue à chaque pion sa représentation graphique avec pygame.
     
     def create_player_pawns(self, layer: int) -> list[dict]:
         """_summary_ : Création des pions du joueur sous forme de liste de dictionnaires. Chaque dictionnaire représente un pion.
