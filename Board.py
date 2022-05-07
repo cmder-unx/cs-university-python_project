@@ -1,52 +1,66 @@
 from GUI import GUI
-from constants import *
+import constants
 from typing import *
 
 class Board:
     
     def __init__(self, size: int, columns: list[str]) -> None:
+        """_summary_ : Initialisation de la classe Board. Création de la board sous forme de liste de dictionnaires.
+        Chaque dictionnaire représente une cellule. Chaque dictionnaire contient les informations à propos de la cellule.
+
+        Args:
+            size (int): la taille de la board
+            columns (list[str]): la liste des noms de colonnes de la board
+        """
         self.size: int = size
         self.columns: list[str] = columns
         self.board: list[dict] = self.create_board()
         GUI().gui_board(self.board)
     
     def __repr__(self) -> str:
-        """_summary_ : this function will return a string containing the representation of the board in its raw form
+        """_summary_ : Représentation de la board sous sa forme brute de liste de dictionnaire.
 
         Returns:
-            str: the representation of the board in its raw form
+            str: la board sous sa forme brute de liste de dictionnaire
         """
         return f"{self.board}"
     
     def __str__(self) -> str:
+        """_summary_ : Affichage de la board sous une forme plus sympathique de damier en console.
+
+        Returns:
+            str: la board sous une forme plus sympathique de damier en console.
         """
-        return the board in a nice way with the owner of each cell 
-        with the column on the top of the board and the row 
-        on the left side of the board
-        """
-        board_in_its_nice_form: str = "" # will contain the board in its nice form (combinaison of rows_names and columns_names)
-        column_names: str = "  " # will contain the column names
-        row_names_and_cells: str = "" # will contain the row names with the cells owner for each cell of each row
+        board_in_its_nice_form: str = ""
+        column_names: str = "  "
+        row_names_and_cells: str = ""
         
-        # add column names to the top of the board
         for column in range(self.size):
             column_names += f" {self.columns[column]} "
         
-        # add each cells with the row number to the left side of the board
         for row in range(self.size):
-            row_names_and_cells += f"\n{row} " # add the row number
+            row_names_and_cells += f"\n{row} "
             for cell in self.board:
-                if cell["cell_row"] == row: # if the cell is in the row we are looking at
-                    row_names_and_cells += f" {cell['cell_owner']} " # add the cell owner
+                if cell["cell_row"] == row:
+                    row_names_and_cells += f" {cell['cell_owner']} "
         
-        board_in_its_nice_form: str = f"{column_names}{row_names_and_cells}" # combine the column names and the row names with cells
+        board_in_its_nice_form: str = f"{column_names}{row_names_and_cells}"
         return board_in_its_nice_form
     
     def create_board(self) -> list[dict]:
-        """_summary_ : this function will create the board and return it as a list of dicts
+        """_summary_ : Création de la board sous forme de liste de dictionnaires. Chaque dictionnaire représente une cellule.
+        Une cellule est représentée par les informations suivantes:
+        - cell_row (int): la ligne de la cellule
+        - cell_column (str): la colonne de la cellule
+        - cell_index (tuple[int, str]): l'index de la cellule (ligne, colonne)
+        - cell_color (str): la couleur de la cellule (claire ou foncé)
+        - cell_is_empty (bool): True si la cellule est vide, False sinon
+        - cell_owner (str): le propriétaire de la cellule, celui qui se trouve sur la cellule. 0 si vide, 1 si noir, 2 si blanc
+        - cell_gui (pygame.Rect) : la cellule sous forme de pygame.Rect (representation graphique de la cellule)
+        
 
         Returns:
-            list[dict]: the board as a list of dicts, each dict represent a cell
+            list[dict]: la board sous forme de liste de dictionnaires
         """
         board: list = []
         for column in self.columns:
@@ -55,10 +69,7 @@ class Board:
                 cell["cell_row"] = row
                 cell["cell_col"] = column
                 cell["cell_index"] = (row, column)
-                
-                # if the cell is in a even row and column, it will be colored with the color 1, else it will be colored with the color 2
-                cell["cell_color"] = CELL_COLOR_1 if (self.columns.index(column) + row) % 2 == 0 else CELL_COLOR_2 
-                
+                cell["cell_color"] = constants.CELL_COLOR_1 if (self.columns.index(column) + row) % 2 == 0 else constants.CELL_COLOR_2 
                 cell["cell_is_empty"] = True
                 cell["cell_owner"] = 0
                 cell["cell_gui"] = None
@@ -66,15 +77,14 @@ class Board:
         return board
     
     def get_cell(self, board: list[dict], cell_index: tuple[int, str]) -> tuple[dict, int]:
-        """_summary_ : this function will return the cell of the board that correspond to the cell_index
+        """_summary_ : Récupération de la cellule correspondant à l'index (ligne, colonne) donné.
 
         Args:
-            board (list[dict]): the board with all the cells
-            cell_index (tuple[int, str]): the index of the cell we want to get tuple (row, column)
+            board (list[dict]): la board sous forme de liste de dictionnaires.
+            cell_index (tuple[int, str]): l'index de la cellule (ligne, colonne)
 
         Returns:
-            tuple[dict, int]: return the cell of the board that correspond to the cell_index and its position index in the board
-                            if the cell that we are looking for is not in the board, return None, None
+            tuple[dict, int]: la cellule correspondant à l'index (ligne, colonne) donné, et son index dans la board
         """        
         beginning_index_of_the_board: int = 0
         end_index_of_the_board: int = len(board) - 1
