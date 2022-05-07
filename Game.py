@@ -118,15 +118,15 @@ class Game:
                             elif cell["cell_gui"].collidepoint(mouse_position) and cell["cell_owner"] != self.player_current_id+1:
                                 if self.reachable_cells_by_pawn != None:
                                     if self.player_current_id == 0:
-                                        self.player1.move_pawn(self.selected_pawn, cell["cell_index"], self.reachable_cells_by_pawn, self.player2.player_pawns, self.board)
-                                        self.turn+=1
+                                        flag: bool = self.player1.move_pawn(self.selected_pawn, cell["cell_index"], self.reachable_cells_by_pawn, self.player2.player_pawns, self.board)
                                     else:
-                                        self.player2.move_pawn(self.selected_pawn, cell["cell_index"], self.reachable_cells_by_pawn, self.player1.player_pawns, self.board)
-                                        self.turn+=1
+                                        flag: bool = self.player2.move_pawn(self.selected_pawn, cell["cell_index"], self.reachable_cells_by_pawn, self.player1.player_pawns, self.board)
                                     self.reachable_cells_by_pawn: dict = None
                                     self.selected_pawn: tuple[dict, int] = None
-                                    data_to_send: dict = {"turn" : self.turn, "player1_pawns" : self.player1.player_pawns, "player2_pawns" : self.player2.player_pawns, "board" : self.board.board}
-                                    self.client.send(data_to_send)
+                                    if flag:
+                                        self.turn+=1
+                                        data_to_send: dict = {"turn" : self.turn, "player1_pawns" : self.player1.player_pawns, "player2_pawns" : self.player2.player_pawns, "board" : self.board.board}
+                                        self.client.send(data_to_send)
                 self.GUI.event_gui_close_game(event, self.game_pid)
             
             self.GUI.draw_gui_board(WINDOW, self.board.board)

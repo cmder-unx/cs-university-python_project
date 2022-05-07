@@ -84,7 +84,7 @@ class Board:
             cell_index (tuple[int, str]): l'index de la cellule (ligne, colonne)
 
         Returns:
-            tuple[dict, int]: la cellule correspondant à l'index (ligne, colonne) donné, et son index dans la board
+            tuple[dict, int]: Tuple contenant la cellule correspondant à l'index (ligne, colonne) donné, et son index dans la board
         """        
         beginning_index_of_the_board: int = 0
         end_index_of_the_board: int = len(board) - 1
