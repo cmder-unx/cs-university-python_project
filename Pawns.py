@@ -9,15 +9,9 @@ class Pawns:
         self.player_id: int = player_id
         self.board: list[dict] = board
         self.player_pawns: list[dict] = self.create_player_pawns(3) 
-        
         GUI().gui_pawns(self.player_pawns, self.board)
     
     def create_player_pawns(self, layer: int) -> list[dict]:
-        """_summary_: this function will create the pawns for the player as a list of dictionnaries
-
-        Returns:
-            list[dict]: the list of the pawns for the player, each pawn is represented by a dictionnary
-        """
         player_pawns: list[dict] = []
         for cell in self.board:
             pawn_informations: dict = {}
@@ -49,17 +43,7 @@ class Pawns:
                 cell["cell_owner"] = self.player_id
         return player_pawns
 
-    def get_pawn(self, pawns: list[dict], pawn_pos: list[int, str]) -> tuple[dict, int]:
-        """_summary_: this function will return the informations about the pawn 
-                    at the position pawn_pos and the index of the pawn in the pawns list
-
-        Args:
-            pawns (list[dict]): player pawns list
-            pawn_pos (list[int, str]): the position of the pawn that we want to get list [row, col]
-
-        Returns:
-            tuple[dict, int]: pawn informations and the index of the pawn in the pawns list
-        """        
+    def get_pawn(self, pawns: list[dict], pawn_pos: list[int, str]) -> tuple[dict, int]:      
         beginning_index_of_the_pawns_list: int = 0
         end_index_of_the_pawns_list: int = len(pawns) - 1
         while beginning_index_of_the_pawns_list <= end_index_of_the_pawns_list:
@@ -101,7 +85,7 @@ class Pawns:
         
         return moves
     
-    def _traverse_left(self, start, stop, step, board: Board, left, skipped=[]) -> dict:
+    def _traverse_left(self, start: int, stop: int, step: int, board: Board, left: int, skipped: list = []) -> dict:
         moves = {}
         last = []
         
@@ -135,7 +119,7 @@ class Pawns:
         
         return moves
     
-    def _traverse_right(self, start, stop, step, board: Board, right, skipped=[]) -> dict:
+    def _traverse_right(self, start: int, stop: int, step: int, board: Board, right: int, skipped: list = []) -> dict:
         moves = {}
         last = []
         
