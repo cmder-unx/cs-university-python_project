@@ -84,7 +84,7 @@ class GUI:
         if event.type == pygame.QUIT:
             pygame.quit()
             if game_pid is not None:
-                os.kill(game_pid, signal.SIGKILL)
+                os.kill(game_pid, signal.SIGKILL) # Pour éviter que les threads restent en vie après la fermeture de la fenêtre
             sys.exit()
     
     def gui_label(self, screen: pygame.Surface, text: str, position: tuple[int, int], font: str, size: int, color: tuple[int, int, int]) -> None:
