@@ -18,8 +18,8 @@ class Server:
         try:
             self.server.bind(self.ADDR)
             print("SERVER CONFIGURATED")
-        except:
-            print("ERROR WHILE TRY TO CONFIGURATE THE SERVER")
+        except socket.error as e:
+            print("ERROR WHILE TRY TO CONFIGURATE THE SERVER", e)
     
     def handle_client(self, client_socket: socket, addr: tuple[str, int]) -> None:
         """_summary_ : Traitement des données reçues par le client
