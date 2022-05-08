@@ -113,7 +113,7 @@ class Pawns:
             moves.update(self.path(row+1, min(row+3, constants.BOARD_SIZE), 1, board, left, "left", skipped=[]))
             moves.update(self.path(row+1, min(row+3, constants.BOARD_SIZE), 1, board, right, "right", skipped=[]))
         
-        # Garde uniquement le meilleur coup possible (si existant)
+        # Garde uniquement le(s) meilleur(s) coup(s) possible(s) (si existe(nt))
         move_max_length: int = 0
         best_moves_keys: dict = {}
         for move in moves:
@@ -128,7 +128,23 @@ class Pawns:
         
         return moves
     
-    def path(self, start: int, stop: int, vertical_direction: int, board: Board, horizontal_direction: int, horizontal_direction_indicator: str, skipped: list = []) -> dict:     
+    def path(self, start: int, stop: int, vertical_direction: int, board: Board, horizontal_direction: int, horizontal_direction_indicator: str, skipped: list = []) -> dict:
+        """_summary_ : Récupération du coup valide pour la diagonale donnée (droite, gauche), dans le sens donné (vers le haut, vers le bas ou les deux).
+
+        Args:
+            start (int): ligne à partir de laquelle on commence à parcourir.
+            stop (int): ligne à partir de laquelle on arrête de parcourir.
+            vertical_direction (int): direction verticale. (Sens : 1 vers le bas pour les pions du joueur 2, -1 vers le haut pour les pions du joueur 1 et pour les pions de type "King" les 2 sens)
+            board (Board): instance de la classe Board.
+            horizontal_direction (int): direction horizontale. (Sens : 1 vers la droite, -1 vers la gauche)
+            horizontal_direction_indicator (str): indicateur de sens pour la direction horizontale. ("right" pour la droite, "left" pour la gauche) pour savoir si on incrémente ou décrémente la variable horizontal_direction.
+            skipped (list, optional): Lees pions adverse que l'on va prendre pour atteindre une position dans le cas où pour atteindre cette position on doit prendre au minimum 2 pions adverses. (default: [])
+
+        Returns:
+            dict: Dictionnaire contenant le coup valide avec les pions à prendre pour ce coup.
+            Exemple : Si on se tient à la position (4, "E") et que l'on souhaite atteindre la position (2, "G") on doit prendre le pion adverse qui se tient à la position (3, "F").
+                    On aura donc comme résultat : {(2, "G") : [(3, "F")]} (pour shématiser)
+        """        
         moves: dict = {}
         last: list = []
         
@@ -166,21 +182,37 @@ class Pawns:
         return moves
 
     def move_pawn(self, pawn: tuple[dict, int], move_to: tuple[int, str], reachable_cells_by_pawn: dict, ennemy_pawns: list[dict], board: Board) -> bool:
+        """_summary_ : Déplacement du pion.
+
+        Args:
+            pawn (tuple[dict, int]): pion à déplacer.
+            move_to (tuple[int, str]): position où déplacer le pion.
+            reachable_cells_by_pawn (dict): positions atteignables par le pion.
+            ennemy_pawns (list[dict]): liste des pions adverses.
+            board (Board): instance de la classe Board.
+
+        Returns:
+            bool: True si le pion a été déplacé, False sinon.
+        """        
         if move_to in reachable_cells_by_pawn:
             current_cell: tuple[dict, int] = board.get_cell(board.board, tuple(pawn[0]["pawn_pos"]))
             destination_cell: tuple[dict, int] = board.get_cell(board.board, move_to)
             if not reachable_cells_by_pawn[move_to]:
+                # Mise à jour de la cellule actuelle du pion
                 current_cell[0]["cell_owner"] = 0
                 current_cell[0]["cell_is_empty"] = True
                 
+                # Mise à jour de la cellule de destination du pion
                 destination_cell[0]["cell_owner"] = self.player_id
                 destination_cell[0]["cell_is_empty"] = False
                 
+                # Mise à jour de la position du pion vers la position de destination
                 pawn[0]["pawn_row"], pawn[0]["pawn_col"] = move_to[0], move_to[1]
                 pawn[0]["pawn_pos"] = list(move_to)
                 pawn[0]["pawn_gui"].x = destination_cell[0]["cell_gui"].x+constants.GUI_CELL_SIZE//2
                 pawn[0]["pawn_gui"].y = destination_cell[0]["cell_gui"].y+constants.GUI_CELL_SIZE//2
                 
+                # Si la cellule de destination se trouve sur la ligne de fin (ligne 0 ou ligne 7), on change le type de pion en "King"
                 if self.player_id == 1 and pawn[0]["pawn_row"] == 0:
                     pawn[0]["pawn_type"] = "King"
                 elif self.player_id == 2 and pawn[0]["pawn_row"] == constants.BOARD_SIZE-1:
@@ -189,16 +221,21 @@ class Pawns:
             else:
                 for cell in reachable_cells_by_pawn[move_to]:
                     if not cell[0]["cell_is_empty"]:
+                        # Mise à jour de la cellule actuelle du pion
                         current_cell[0]["cell_owner"] = 0
                         current_cell[0]["cell_is_empty"] = True
                         
+                        # Mise à jour de la cellule sur laquelle se trouve le pion adverse
                         cell[0]["cell_owner"] = 0
                         cell[0]["cell_is_empty"] = True
+                        # On prend le pion adverse
                         self.take_pawn(ennemy_pawns, list(cell[0]["cell_index"]))
                 
+                # Mise à jour de la cellule de destination du pion
                 destination_cell[0]["cell_owner"] = self.player_id
                 destination_cell[0]["cell_is_empty"] = False
                 
+                # Mise à jour de la position du pion vers la position de destination
                 pawn[0]["pawn_row"], pawn[0]["pawn_col"] = move_to[0], move_to[1]
                 pawn[0]["pawn_pos"] = list(move_to)
                 pawn[0]["pawn_gui"].x = destination_cell[0]["cell_gui"].x+constants.GUI_CELL_SIZE//2
@@ -214,6 +251,12 @@ class Pawns:
             return False
 
     def take_pawn(self, pawns: list[dict], pawn_pos: list[int, str]) -> None:
+        """_summary_ : Prendre un pion adverse.
+
+        Args:
+            pawns (list[dict]): liste des pions adverses.
+            pawn_pos (list[int, str]): position du pion adverse à prendre.
+        """        
         pawn_to_take: tuple[dict, int] = self.get_pawn(pawns, pawn_pos)
         if None not in pawn_to_take:
             pawn_to_take[0]["pawn_status"] = "dead"
