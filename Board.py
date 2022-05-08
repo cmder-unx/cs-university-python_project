@@ -1,5 +1,5 @@
 from GUI import GUI
-import constants
+from constants import *
 from typing import *
 
 class Board:
@@ -69,7 +69,7 @@ class Board:
                 cell["cell_row"] = row
                 cell["cell_col"] = column
                 cell["cell_index"] = (row, column)
-                cell["cell_color"] = constants.CELL_COLOR_1 if (self.columns.index(column) + row) % 2 == 0 else constants.CELL_COLOR_2 
+                cell["cell_color"] = CELL_COLOR_1 if (self.columns.index(column) + row) % 2 == 0 else CELL_COLOR_2 
                 cell["cell_is_empty"] = True
                 cell["cell_owner"] = 0
                 cell["cell_gui"] = None

@@ -1,6 +1,6 @@
 from GUI import GUI
 from Board import Board
-import constants
+from constants import *
 from typing import *
 
 class Pawns:
@@ -39,7 +39,7 @@ class Pawns:
         player_pawns: list[dict] = []
         for cell in self.board:
             pawn_informations: dict = {}
-            if self.player_id == 1 and cell["cell_row"] > constants.BOARD_SIZE-(layer+1) and cell["cell_color"] == "B":
+            if self.player_id == 1 and cell["cell_row"] > BOARD_SIZE-(layer+1) and cell["cell_color"] == "B":
                 pawn_informations["pawn_type"] = "Pawn"
                 pawn_informations["pawn_color"] = "W"
                 pawn_informations["pawn_status"] = "alive"
@@ -101,8 +101,8 @@ class Pawns:
             dict: Dictionnaire contenant les coups valides pour le pion donné.
         """        
         moves: dict = {}
-        left: int = constants.BOARD_COLUMNS.index(pawn[0]["pawn_col"]) - 1
-        right: int = constants.BOARD_COLUMNS.index(pawn[0]["pawn_col"]) + 1
+        left: int = BOARD_COLUMNS.index(pawn[0]["pawn_col"]) - 1
+        right: int = BOARD_COLUMNS.index(pawn[0]["pawn_col"]) + 1
         row: int = pawn[0]["pawn_row"]
         
         if pawn[0]["pawn_owner"] == 1 or pawn[0]["pawn_type"] == "King":
@@ -110,8 +110,8 @@ class Pawns:
             moves.update(self.path(row-1, max(row-3, -1), -1, board, right, "right", skipped=[]))
         
         if pawn[0]["pawn_owner"] == 2 or pawn[0]["pawn_type"] == "King":
-            moves.update(self.path(row+1, min(row+3, constants.BOARD_SIZE), 1, board, left, "left", skipped=[]))
-            moves.update(self.path(row+1, min(row+3, constants.BOARD_SIZE), 1, board, right, "right", skipped=[]))
+            moves.update(self.path(row+1, min(row+3, BOARD_SIZE), 1, board, left, "left", skipped=[]))
+            moves.update(self.path(row+1, min(row+3, BOARD_SIZE), 1, board, right, "right", skipped=[]))
         
         # Garde uniquement le(s) meilleur(s) coup(s) possible(s) (si existe(nt))
         move_max_length: int = 0
@@ -149,23 +149,23 @@ class Pawns:
         last: list = []
         
         for row in range(start, stop, vertical_direction):
-            if horizontal_direction < 0 or horizontal_direction >= len(constants.BOARD_COLUMNS):
+            if horizontal_direction < 0 or horizontal_direction >= len(BOARD_COLUMNS):
                 break
             
-            current_cell: tuple[dict, int] = board.get_cell(board.board, (row, constants.BOARD_COLUMNS[horizontal_direction]))
+            current_cell: tuple[dict, int] = board.get_cell(board.board, (row, BOARD_COLUMNS[horizontal_direction]))
             if current_cell[0]["cell_is_empty"] == True:
                 if skipped and not last:
                     break
                 elif skipped:
-                    moves[(row, constants.BOARD_COLUMNS[horizontal_direction])] = last + skipped
+                    moves[(row, BOARD_COLUMNS[horizontal_direction])] = last + skipped
                 else:
-                    moves[(row, constants.BOARD_COLUMNS[horizontal_direction])] = last
+                    moves[(row, BOARD_COLUMNS[horizontal_direction])] = last
                 
                 if last:
                     if vertical_direction == -1:
                         row_range: int = max(row-3, -1)
                     else:
-                        row_range: int = min(row+3, constants.BOARD_SIZE)
+                        row_range: int = min(row+3, BOARD_SIZE)
                     moves.update(self.path(row+vertical_direction, row_range, vertical_direction, board, horizontal_direction-1, "left", skipped=last))
                     moves.update(self.path(row+vertical_direction, row_range, vertical_direction, board, horizontal_direction+1, "right",skipped=last))
                 break
@@ -209,13 +209,13 @@ class Pawns:
                 # Mise à jour de la position du pion vers la position de destination
                 pawn[0]["pawn_row"], pawn[0]["pawn_col"] = move_to[0], move_to[1]
                 pawn[0]["pawn_pos"] = list(move_to)
-                pawn[0]["pawn_gui"].x = destination_cell[0]["cell_gui"].x+constants.GUI_CELL_SIZE//2
-                pawn[0]["pawn_gui"].y = destination_cell[0]["cell_gui"].y+constants.GUI_CELL_SIZE//2
+                pawn[0]["pawn_gui"].x = destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
+                pawn[0]["pawn_gui"].y = destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
                 
                 # Si la cellule de destination se trouve sur la ligne de fin (ligne 0 ou ligne 7), on change le type de pion en "King"
                 if self.player_id == 1 and pawn[0]["pawn_row"] == 0:
                     pawn[0]["pawn_type"] = "King"
-                elif self.player_id == 2 and pawn[0]["pawn_row"] == constants.BOARD_SIZE-1:
+                elif self.player_id == 2 and pawn[0]["pawn_row"] == BOARD_SIZE-1:
                     pawn[0]["pawn_type"] = "King"
                 
             else:
@@ -238,12 +238,12 @@ class Pawns:
                 # Mise à jour de la position du pion vers la position de destination
                 pawn[0]["pawn_row"], pawn[0]["pawn_col"] = move_to[0], move_to[1]
                 pawn[0]["pawn_pos"] = list(move_to)
-                pawn[0]["pawn_gui"].x = destination_cell[0]["cell_gui"].x+constants.GUI_CELL_SIZE//2
-                pawn[0]["pawn_gui"].y = destination_cell[0]["cell_gui"].y+constants.GUI_CELL_SIZE//2
+                pawn[0]["pawn_gui"].x = destination_cell[0]["cell_gui"].x+GUI_CELL_SIZE//2
+                pawn[0]["pawn_gui"].y = destination_cell[0]["cell_gui"].y+GUI_CELL_SIZE//2
                 
                 if self.player_id == 1 and pawn[0]["pawn_row"] == 0:
                     pawn[0]["pawn_type"] = "King"
-                elif self.player_id == 2 and pawn[0]["pawn_row"] == constants.BOARD_SIZE-1:
+                elif self.player_id == 2 and pawn[0]["pawn_row"] == BOARD_SIZE-1:
                     pawn[0]["pawn_type"] = "King"
             
             return True
@@ -268,7 +268,7 @@ class Pawns:
 
 
 if __name__ == "__main__":
-    board = Board(constants.BOARD_SIZE, constants.BOARD_COLUMNS)
+    board = Board(BOARD_SIZE, BOARD_COLUMNS)
     pawn = Pawns(1, board.board)
     pawn2 = Pawns(2, board.board)
     

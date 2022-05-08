@@ -1,7 +1,7 @@
 import string, pygame
 
 """
-THIS FILE CONTAINS ALL THE CONSTANTS USED IN THE GAME
+CE FICHIER CONTIENT LES CONSTANTES UTILISEES DANS LE CODE
 """
 
 # DEFINE CONSTANTS
@@ -30,7 +30,7 @@ GUI_KING_COLOR_1: tuple[int, int, int] = (60,125,255)
 GUI_KING_COLOR_2: tuple[int, int, int] = (255,125,60)
 
 #    PYGAME
-GAME_NAME: str = "Checkers"
+GAME_NAME: str = "Jeu de dames"
 WIDTH: int = BOARD_SIZE*GUI_CELL_SIZE
 HEIGHT: int = BOARD_SIZE*GUI_CELL_SIZE
 WINDOW_SIZE: tuple[int, int] = (WIDTH, HEIGHT)
@@ -39,3 +39,9 @@ CLOCK: pygame.time.Clock = pygame.time.Clock()
 
 WINDOW: pygame.Surface = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption(GAME_NAME)
+
+START_MENU_TITLE = "Jeu de Dames"
+START_MENU_SUBTITLE = "Entrez l'adresse IP du serveur"
+START_MENU_JOIN_BUTTON_TEXT = "Rejoindre"
+
+WAITING_FOR_PLAYER2_LABEL: str = "En attente du joueur 2"

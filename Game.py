@@ -58,19 +58,19 @@ class Game:
         receive_data_clients_list = threading.Thread(target=self.receive_data_clients_list)
         receive_data_clients_list.start()
         while True:
-            pygame.display.set_caption(f"{GAME_NAME} - Waiting for player 2 to connect") # Set the window title
+            pygame.display.set_caption(f"{GAME_NAME} - En attente du joueur 2") # Set the window title
             
             for event in pygame.event.get():
                 self.GUI.event_gui_close_game(event, self.game_pid)
             
-            label: str = "Waiting for player 2 to connect"
-            self.GUI.gui_label(WINDOW, label, (WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2), None, 35, WHITE)
+            
+            self.GUI.gui_label(WINDOW, WAITING_FOR_PLAYER2_LABEL, (WINDOW_SIZE[0]/2, WINDOW_SIZE[1]/2), None, 35, BLACK)
             
             if self.number_of_players_currently_connected == 2:
                 break
             
             CLOCK.tick(FPS)
-            self.GUI.window_update(WINDOW, BLACK, CLOCK, False)
+            self.GUI.gui_window_update(WINDOW, WHITE, CLOCK, False)
         receive_data_clients_list.join()
     
     def winner_check(self) -> int:
@@ -93,7 +93,7 @@ class Game:
         receive_data_netw.start()
         game_running = True
         while game_running:
-            pygame.display.set_caption(f"{GAME_NAME} - Player {self.player_current_id+1} - Turn {self.turn}")
+            pygame.display.set_caption(f"{GAME_NAME} - Joueur {self.player_current_id+1} - Tour n° {self.turn}")
             mouse_position: tuple[int, int] = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -137,7 +137,7 @@ class Game:
             self.winner_id: int = self.winner_check()
 
             CLOCK.tick(FPS)
-            self.GUI.window_update(WINDOW, BLACK, CLOCK, False)
+            self.GUI.gui_window_update(WINDOW, BLACK, CLOCK, False)
             
             if self.number_of_players_currently_connected == 1 or self.winner_id is not None:
                 game_running = False
@@ -146,7 +146,7 @@ class Game:
             self.GUI.gui_player_has_left_screen(self.game_pid)
         elif self.winner_id is not None:
             if self.winner_id != self.player_current_id:
-                self.GUI.gui_winner_screen(f"Player {self.winner_id+1}", self.game_pid)
+                self.GUI.gui_winner_screen(f"Le joueur {self.winner_id+1} a gagné !", self.game_pid)
             else:
-                self.GUI.gui_winner_screen(f"You", self.game_pid)
+                self.GUI.gui_winner_screen(f"Tu as gagné !", self.game_pid)
         
